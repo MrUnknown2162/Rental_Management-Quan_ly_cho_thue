@@ -1,29 +1,14 @@
-<!DOCTYPE html>
-<html lang="vi">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Rental System</title>
-  <script src="https://cdn.tailwindcss.com"></script>
-  <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.5.0/css/all.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-</head>
-<body class="bg-gradient-to-br from-indigo-600 via-purple-600 to-pink-600 min-h-screen flex items-center justify-center">
-  <div class="text-center text-white">
-    <div class="animate-spin rounded-full h-24 w-24 border-8 border-white border-t-transparent mx-auto mb-8"></div>
-    <h1 class="text-6xl font-bold mb-4">Rental System</h1>
-    <p class="text-2xl opacity-90">Đang xác thực...</p>
-  </div>
+<script>
+  document.addEventListener("DOMContentLoaded", () => {
+    const token = localStorage.getItem("token");
+    const role = localStorage.getItem("role");
 
-  <script src="assets/js/auth.js"></script>
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const token = localStorage.getItem("token");
-      const role = localStorage.getItem("role");
-      if (!token) location.href = "login.html";
-      else if (role === "admin") location.href = "dashboard-admin.html";
-      else location.href = "asset-list.html";
-    });
-  </script>
-</body>
-</html>
+    if (!token) {
+      location.href = "login.html";
+    } else if (role === "admin") {
+      location.href = "dashboard-admin.html";
+    } else {
+      location.href = "asset-list.html";
+    }
+  });
+</script>
