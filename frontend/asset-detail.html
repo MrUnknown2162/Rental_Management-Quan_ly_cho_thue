@@ -1,0 +1,53 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Property Detail — Rental Manager</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <header class="topbar glass">
+    <div class="brand">Rental Manager</div>
+    <div class="actions">
+      <a class="btn btn-ghost" href="index.html">Back</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section id="detail" class="glass detail-card"></section>
+  </main>
+
+  <script src="config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script>
+    async function loadDetail() {
+      const params = new URLSearchParams(location.search);
+      const id = params.get('id');
+      if (!id) {
+        document.getElementById('detail').innerHTML = '<p class="error">No id specified.</p>';
+        return;
+      }
+      try {
+        const item = await api.fetchAssetById(id);
+        document.getElementById('detail').innerHTML = `
+          <div class="detail-grid">
+            <img src="${item.image || 'assets/img/placeholder.png'}" alt="" />
+            <div>
+              <h1>${item.name}</h1>
+              <p class="muted">${item.type} • ${item.location}</p>
+              <p class="price">${item.price}/month</p>
+              <p>${item.description || 'No description provided.'}</p>
+              <div style="margin-top:12px">
+                <button class="btn btn-primary" onclick="alert('Rent call')">Rent</button>
+              </div>
+            </div>
+          </div>`;
+      } catch (err) {
+        document.getElementById('detail').innerHTML = '<p class="error">Property not found.</p>';
+      }
+    }
+    window.addEventListener('load', loadDetail);
+  </script>
+</body>
+</html>

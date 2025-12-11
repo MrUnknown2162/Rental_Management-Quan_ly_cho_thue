@@ -1,0 +1,97 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Rental Dashboard</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;600;700&family=Poppins:wght@500;600&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="bg-layer"></div>
+
+  <header class="topbar glass">
+    <div class="brand">Rental Manager</div>
+    <div class="actions">
+      <button class="btn" id="btn-refresh">Refresh</button>
+      <button class="btn btn-primary" id="btn-add">Add Property</button>
+      <a class="btn btn-ghost" href="login.html">Sign out</a>
+    </div>
+  </header>
+
+  <main class="container">
+    <section class="search glass">
+      <input id="q" placeholder="Search by name, location..." />
+      <select id="status">
+        <option value="">All status</option>
+        <option value="available">Available</option>
+        <option value="rented">Rented</option>
+      </select>
+      <button class="btn btn-primary" id="btn-search">Search</button>
+    </section>
+
+    <section id="assets" class="grid"></section>
+  </main>
+
+  <template id="card-template">
+    <article class="card glass hover-3d">
+      <div class="card-image">
+        <img class="thumb" src="assets/img/placeholder.png" alt="property" />
+      </div>
+      <div class="card-body">
+        <h3 class="card-title"></h3>
+        <p class="card-meta"></p>
+        <div class="card-actions">
+          <button class="btn btn-outline btn-view">View</button>
+          <button class="btn btn-primary btn-rent">Rent</button>
+        </div>
+      </div>
+    </article>
+  </template>
+
+  <script src="config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/ui.js"></script>
+  <script>
+    const assetsEl = document.getElementById('assets');
+    const tpl = document.getElementById('card-template');
+
+    async function loadAssets() {
+      try {
+        ui.showLoader(assetsEl);
+        const q = document.getElementById('q').value || '';
+        const status = document.getElementById('status').value || '';
+        const list = await api.fetchAssets({ q, status });
+        assetsEl.innerHTML = '';
+        if (!list.length) {
+          assetsEl.innerHTML = '<p class="empty">No properties found.</p>';
+          return;
+        }
+        list.forEach(item => {
+          const node = tpl.content.cloneNode(true);
+          node.querySelector('.card-title').textContent = item.name;
+          node.querySelector('.card-meta').textContent = `${item.type} • ${item.location} • ${item.price}/month`;
+          node.querySelector('.thumb').src = item.image || 'assets/img/placeholder.png';
+          node.querySelector('.btn-view').addEventListener('click', () => {
+            window.location = `asset-detail.html?id=${item.id}`;
+          });
+          node.querySelector('.btn-rent').addEventListener('click', async () => {
+            ui.showToast('Rent API called (demo)');
+            // example: await api.rentAsset(item.id);
+          });
+          assetsEl.appendChild(node);
+        });
+      } catch (err) {
+        assetsEl.innerHTML = '<p class="error">Failed to load properties.</p>';
+        console.error(err);
+      } finally {
+        ui.hideLoader();
+      }
+    }
+
+    window.addEventListener('load', loadAssets);
+    document.getElementById('btn-refresh').addEventListener('click', loadAssets);
+    document.getElementById('btn-search').addEventListener('click', loadAssets);
+  </script>
+</body>
+</html>

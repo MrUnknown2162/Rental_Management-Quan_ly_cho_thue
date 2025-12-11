@@ -1,0 +1,10 @@
+# Frontend — Rental Manager (User 2)
+
+## Structure
+See `frontend/` for static frontend files.
+
+## Quick start (Ubuntu / VM)
+1. Open a terminal in `frontend/`:
+```bash
+cd frontend
+python3 -m http.server 8080

@@ -1,0 +1,47 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Register — Rental Manager</title>
+  <link rel="stylesheet" href="assets/css/styles.css" />
+</head>
+<body>
+  <div class="auth-page">
+    <form id="register-form" class="auth-card glass">
+      <h2>Create account</h2>
+      <label>Full name
+        <input type="text" id="name" required />
+      </label>
+      <label>Email
+        <input type="email" id="email" required />
+      </label>
+      <label>Password
+        <input type="password" id="password" required minlength="6" />
+      </label>
+      <button class="btn btn-primary" type="submit">Register</button>
+      <p class="muted">Already have an account? <a href="login.html">Sign in</a></p>
+    </form>
+  </div>
+
+  <script src="config.js"></script>
+  <script src="assets/js/api.js"></script>
+  <script>
+    document.getElementById('register-form').addEventListener('submit', async (e) => {
+      e.preventDefault();
+      const data = {
+        name: document.getElementById('name').value.trim(),
+        email: document.getElementById('email').value.trim(),
+        password: document.getElementById('password').value
+      };
+      try {
+        await api.register(data);
+        alert('Account created. Please sign in.');
+        window.location = 'login.html';
+      } catch (err) {
+        alert(err.message || 'Registration failed');
+      }
+    });
+  </script>
+</body>
+</html>
