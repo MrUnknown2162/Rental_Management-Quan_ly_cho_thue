@@ -1,34 +1,39 @@
-const api = (() => {
-  const base = () => (typeof CONFIG !== 'undefined' ? CONFIG.API_BASE : 'http://localhost:8000');
+// DÙNG TẠM ĐỂ TEST ĐĂNG KÝ/ĐĂNG NHẬP NGAY LẬP TỨC
+const API_URL = "https://rental-demo-backend.onrender.com";
 
-  async function request(path, opts = {}) {
-    const headers = opts.headers || {};
-    const token = localStorage.getItem('token');
-    if (token) headers['Authorization'] = `Bearer ${token}`;
-    if (opts.body && !(opts.body instanceof FormData)) {
-      headers['Content-Type'] = 'application/json';
-      opts.body = JSON.stringify(opts.body);
-    }
-    const res = await fetch(base() + path, { headers, ...opts });
-    if (!res.ok) {
-      const text = await res.text().catch(() => '');
-      let err = { status: res.status, message: res.statusText };
-      try { err = { ...err, ...(JSON.parse(text) || {}) }; } catch {}
-      throw err;
-    }
-    // try parse json, otherwise return text
-    const ct = res.headers.get('content-type') || '';
-    if (ct.includes('application/json')) return res.json();
-    return res.text();
-  }
-
-  return {
-    fetchAssets: async ({ q = '', status = '' } = {}) =>
-      request(`/assets?q=${encodeURIComponent(q)}&status=${encodeURIComponent(status)}`),
-    fetchAssetById: (id) => request(`/assets/${id}`),
-    login: (payload) => request('/auth/login', { method: 'POST', body: payload }),
-    register: (payload) => request('/auth/register', { method: 'POST', body: payload }),
-    // placeholder for rent
-    rentAsset: (id, payload = {}) => request(`/assets/${id}/rent`, { method: 'POST', body: payload })
+async function apiFetch(endpoint, options = {}) {
+  const token = localStorage.getItem("token");
+  const headers = {
+    "Content-Type": "application/json",
+    ...(token && { Authorization: `Bearer ${token}` }),
+    ...options.headers,
   };
-})();
+  const res = await fetch(`${API_URL}${endpoint}`, { ...options, headers });
+  if (res.status === 401) { localStorage.clear(); location.href = "login.html"; }
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || "Lỗi server");
+  return data;
+}
+
+async function login(email, password) {
+  const res = await fetch(`${API_URL}/auth/login`, {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({ email, password }),
+  });
+  const data = await res.json();
+  if (!res.ok) throw new Error(data.detail || "Sai thông tin");
+  localStorage.setItem("token", data.access_token);
+  localStorage.setItem("role", data.role || "user");
+  return data;
+}
+
+async function register(name, email, password) {
+  return await apiFetch("/auth/register", {
+    method: "POST",
+    body: JSON.stringify({ name, email, password }),
+  });
+}
+
+async function getAssets() { return await apiFetch("/assets/"); }
+async function createAsset(asset) { return await apiFetch("/assets/", { method: "POST", body: JSON.stringify(asset) }); }

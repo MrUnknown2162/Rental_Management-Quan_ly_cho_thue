@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Admin Panel</title>
+  <script src="https://cdn.tailwindcss.com"></script>
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body class="bg-gray-100 min-h-screen">
+  <nav class="bg-gradient-to-r from-purple-900 to-indigo-900 text-white shadow-2xl fixed w-full top-0 z-50">
+    <div class="max-w-7xl mx-auto px-6 py-6 flex justify-between items-center">
+      <h1 class="text-4xl font-bold">ADMIN PANEL</h1>
+      <button data-logout class="bg-white/20 hover:bg-white/30 px-10 py-4 rounded-full text-xl font-semibold">Đăng xuất</button>
+    </div>
+  </nav>
+
+  <div class="pt-32 px-6 max-w-7xl mx-auto">
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-10 mb-16">
+      <div class="bg-gradient-to-br from-green-500 to-emerald-600 text-white p-10 rounded-3xl shadow-2xl text-center">
+        <h3 class="text-2xl font-bold">Tổng Tài Sản</h3>
+        <p class="text-6xl font-bold mt-4">24</p>
+      </div>
+      <div class="bg-gradient-to-br from-blue-500 to-cyan-600 text-white p-10 rounded-3xl shadow-2xl text-center">
+        <h3 class="text-2xl font-bold">Hợp Đồng</h3>
+        <p class="text-6xl font-bold mt-4">18</p>
+      </div>
+      <div class="bg-gradient-to-br from-pink-500 to-rose-600 text-white p-10 rounded-3xl shadow-2xl text-center">
+        <h3 class="text-2xl font-bold">Doanh Thu</h3>
+        <p class="text-5xl font-bold mt-4">127.5tr</p>
+      </div>
+    </div>
+
+    <div class="bg-white rounded-3xl shadow-2xl p-12">
+      <h2 class="text-4xl font-bold text-indigo-800 mb-10">Thêm Tài Sản Mới</h2>
+      <form id="addAssetForm" class="grid grid-cols-1 md:grid-cols-2 gap-8">
+        <input type="text" id="name" required placeholder="Tên tài sản" class="px-8 py-5 border-2 rounded-2xl text-xl">
+        <input type="text" id="description" required placeholder="Mô tả" class="px-8 py-5 border-2 rounded-2xl text-xl">
+        <input type="number" id="price" required placeholder="Giá/ngày (VNĐ)" class="px-8 py-5 border-2 rounded-2xl text-xl">
+        <input type="text" id="location" required placeholder="Địa chỉ" class="px-8 py-5 border-2 rounded-2xl text-xl">
+        <button type="submit" class="md:col-span-2 bg-gradient-to-r from-indigo-600 to-purple-700 text-white text-2xl font-bold py-6 rounded-2xl hover:scale-105 transition">
+          Thêm Ngay
+        </button>
+      </form>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/auth.js"></script>
+  <script>
+    document.getElementById("addAssetForm").addEventListener("submit", async e => {
+      e.preventDefault();
+      const asset = {
+        name: e.target.name.value,
+        description: e.target.description.value,
+        price_per_day: parseInt(e.target.price.value),
+        location: e.target.location.value
+      };
+      try {
+        await createAsset(asset);
+        alert("Thêm thành công!");
+        e.target.reset();
+      } catch (err) { alert("Lỗi: " + err.message); }
+    });
+  </script>
+</body>
+</html>
