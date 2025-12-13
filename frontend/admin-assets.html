@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width,initial-scale=1">
+  <title>Admin - Quản lý tài sản</title>
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+  <link rel="stylesheet" href="assets/css/style.css">
+</head>
+<body>
+  <nav class="navbar navbar-dark bg-dark">
+    <div class="container">
+      <a class="navbar-brand" href="index.html">Rental Manager</a>
+      <div>
+        <a class="btn btn-outline-light me-2" href="dashboard.html">Dashboard</a>
+        <a class="btn btn-outline-light" href="assets.html">Site</a>
+      </div>
+    </div>
+  </nav>
+
+  <main class="container py-5">
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <h3>Quản lý tài sản</h3>
+      <div>
+        <button class="btn btn-primary" id="btnAdd">Thêm tài sản</button>
+      </div>
+    </div>
+
+    <div class="table-responsive">
+      <table class="table table-hover align-middle" id="assetsTable">
+        <thead class="table-light">
+          <tr>
+            <th>ID</th>
+            <th>Hình</th>
+            <th>Tên</th>
+            <th>Giá/ngày</th>
+            <th>Trạng thái</th>
+            <th>Mô tả</th>
+            <th>Hành động</th>
+          </tr>
+        </thead>
+        <tbody></tbody>
+      </table>
+    </div>
+  </main>
+
+  <!-- Modal Add/Edit -->
+  <div class="modal fade" id="assetModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+      <div class="modal-content p-3">
+        <div class="modal-header">
+          <h5 class="modal-title" id="assetModalTitle">Thêm tài sản</h5>
+          <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        </div>
+        <div class="modal-body">
+          <form id="assetForm">
+            <input type="hidden" id="assetId">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label>Tên</label>
+                <input id="assetName" class="form-control" required>
+              </div>
+              <div class="col-md-6">
+                <label>Giá / ngày (VNĐ)</label>
+                <input id="assetPrice" class="form-control" type="number" required>
+              </div>
+              <div class="col-12">
+                <label>Hình ảnh (URL)</label>
+                <input id="assetImage" class="form-control" placeholder="https://...">
+              </div>
+              <div class="col-12">
+                <label>Mô tả</label>
+                <textarea id="assetDesc" class="form-control" rows="3"></textarea>
+              </div>
+              <div class="col-md-4">
+                <label>Trạng thái</label>
+                <select id="assetStatus" class="form-select">
+                  <option value="available">Available</option>
+                  <option value="rented">Rented</option>
+                  <option value="maintenance">Maintenance</option>
+                </select>
+              </div>
+            </div>
+          </form>
+        </div>
+        <div class="modal-footer">
+          <button class="btn btn-secondary" data-bs-dismiss="modal">Hủy</button>
+          <button class="btn btn-primary" id="saveAssetBtn">Lưu</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <!-- Confirm Delete -->
+  <div class="modal fade" id="confirmDeleteModal" tabindex="-1" aria-hidden="true">
+    <div class="modal-dialog">
+      <div class="modal-content p-3">
+        <div class="modal-body">
+          <p>Bạn có chắc muốn xóa tài sản này?</p>
+          <div class="text-end">
+            <button class="btn btn-secondary me-2" data-bs-dismiss="modal">Hủy</button>
+            <button class="btn btn-danger" id="confirmDeleteBtn">Xóa</button>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <script src="assets/js/api.js"></script>
+  <script src="assets/js/admin.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>
