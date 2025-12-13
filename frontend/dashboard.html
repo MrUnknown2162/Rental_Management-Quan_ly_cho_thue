@@ -1,61 +1,312 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Dashboard</title>
+  <meta charset="UTF-8">
+  <title>Dashboard quản lý</title>
+
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/cute.css">
+
+  <style>
+    .dashboard-card {
+      cursor: pointer;
+      transition: all 0.3s ease;
+      border-radius: 20px;
+    }
+    .dashboard-card:hover {
+      transform: translateY(-6px);
+      box-shadow: 0 12px 25px rgba(255,105,180,0.4);
+    }
+  </style>
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">Rental Manager</a>
-      <div class="d-flex ms-auto">
-        <button class="btn btn-outline-light me-2" onclick="logout()">Đăng xuất</button>
+<script>
+if (localStorage.getItem("adminLogged") !== "true") {
+  alert("Vui lòng đăng nhập quản trị");
+  window.location.href = "admin-login.html";
+}
+</script>
+
+<script>
+const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
+if (!CURRENT_USER || CURRENT_USER.role !== "admin") {
+  alert("Bạn không có quyền truy cập trang quản trị");
+  window.location.href = "login.html";
+}
+</script>
+
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">QARent</a>
+    <div>
+      <a href="index.html" class="btn btn-light me-2">Trang chủ</a>
+      <a href="assets.html" class="btn btn-light me-2">Tài sản</a>
+      <a href="dashboard.html" class="btn btn-light active me-2">Dashboard</a>
+      <a href="login.html" class="btn btn-light">Đăng xuất</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= TIÊU ĐỀ ================= -->
+<section class="container py-5">
+  <h1 class="fw-bold">📊 Dashboard quản lý</h1>
+  <p class="text-muted">Tổng quan hệ thống quản lý cho thuê</p>
+</section>
+
+<!-- ================= CARD THỐNG KÊ ================= -->
+<section class="container pb-5">
+  <div class="row">
+
+    <!-- Tổng tài sản -->
+    <div class="col-md-3 mb-4">
+      <div class="card p-4 text-center dashboard-card" onclick="openDetail('assets')">
+        <h6>Tổng tài sản</h6>
+        <h2 class="fw-bold text-danger">6</h2>
+        <p>Nhà • Chung cư • Xe</p>
       </div>
     </div>
-  </nav>
 
-  <main class="container py-5">
-    <h3 class="mb-4">Dashboard</h3>
-
-    <div class="row g-4">
-      <div class="col-md-4">
-        <div class="card p-3">
-          <h5>Tổng tài sản</h5>
-          <p id="totalAssets" class="display-6 fw-bold">--</p>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card p-3">
-          <h5>Hợp đồng đang thuê</h5>
-          <p id="activeRentals" class="display-6 fw-bold">--</p>
-        </div>
-      </div>
-
-      <div class="col-md-4">
-        <div class="card p-3">
-          <h5>Doanh thu (mock)</h5>
-          <p id="revenue" class="display-6 fw-bold">--</p>
-        </div>
+    <!-- Đang cho thuê -->
+    <div class="col-md-3 mb-4">
+      <div class="card p-4 text-center dashboard-card" onclick="openDetail('renting')">
+        <h6>Đang cho thuê</h6>
+        <h2 class="fw-bold text-success">3</h2>
+        <p>Hợp đồng hiệu lực</p>
       </div>
     </div>
-  </main>
 
-  <script src="assets/js/api.js"></script>
-  <script>
-    // mock dashboard values
-    document.getElementById('totalAssets').innerText = 12;
-    document.getElementById('activeRentals').innerText = 3;
-    document.getElementById('revenue').innerText = "₫ 15,600,000";
+    <!-- Tạm hết -->
+    <div class="col-md-3 mb-4">
+      <div class="card p-4 text-center dashboard-card" onclick="openDetail('unavailable')">
+        <h6>Tạm hết</h6>
+        <h2 class="fw-bold text-warning">3</h2>
+        <p>Chưa khả dụng</p>
+      </div>
+    </div>
 
-    function logout(){
-      localStorage.removeItem('token');
-      location.href = 'index.html';
-    }
-  </script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Người dùng -->
+    <div class="col-md-3 mb-4">
+      <div class="card p-4 text-center dashboard-card" onclick="openDetail('users')">
+        <h6>Người dùng</h6>
+        <h2 class="fw-bold text-primary">?</h2>
+        <p>Đã đăng ký</p>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= MODAL CHI TIẾT ================= -->
+<div class="modal fade" id="detailModal" tabindex="-1">
+  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title" id="modalTitle"></h5>
+        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+      </div>
+      <div class="modal-body" id="modalBody"></div>
+    </div>
+  </div>
+</div>
+
+<!-- ================= FOOTER ================= -->
+<footer class="text-center py-4">
+  <p>© 2025 Hệ thống quản lý cho thuê</p>
+</footer>
+
+<!-- ================= SCRIPT ================= -->
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ===== DỮ LIỆU GIẢ LẬP ===== */
+
+const allAssets = [
+  { name: "Nhà phố Quận 1", type: "Nhà", status: "Đang cho thuê" },
+  { name: "Nhà nguyên căn Thủ Đức", type: "Nhà", status: "Tạm hết" },
+  { name: "Chung cư Quận 7", type: "Chung cư", status: "Đang cho thuê" },
+  { name: "Chung cư Bình Thạnh", type: "Chung cư", status: "Tạm hết" },
+  { name: "Toyota Vios 2022", type: "Xe", status: "Đang cho thuê" },
+  { name: "Honda City 2023", type: "Xe", status: "Tạm hết" }
+];
+
+const rentingContracts = [
+  {
+    contract: "HD001",
+    customer: "Nguyễn Văn A",
+    phone: "0901234567",
+    email: "vana@gmail.com",
+    asset: "Nhà phố Quận 1",
+    time: "01/01/2025 – 01/03/2025"
+  },
+  {
+    contract: "HD002",
+    customer: "Trần Thị B",
+    phone: "0987654321",
+    email: "thib@gmail.com",
+    asset: "Toyota Vios 2022",
+    time: "10/02/2025 – 20/02/2025"
+  }
+];
+
+/* ===== HÀM MỞ CHI TIẾT ===== */
+
+function openDetail(type) {
+  let title = "";
+  let html = "";
+
+  if (type === "assets") {
+    title = "📦 Tổng tài sản trong hệ thống";
+    html = "<ul>";
+    allAssets.forEach(a => {
+      html += `<li><b>${a.name}</b> (${a.type}) – ${a.status}</li>`;
+    });
+    html += "</ul>";
+  }
+
+  if (type === "unavailable") {
+    title = "⛔ Tài sản tạm hết";
+    html = "<ul>";
+    allAssets
+      .filter(a => a.status === "Tạm hết")
+      .forEach(a => html += `<li>${a.name} (${a.type})</li>`);
+    html += "</ul>";
+  }
+
+  if (type === "renting") {
+    title = "📄 Tài sản đang cho thuê";
+    html = `
+      <table class="table table-bordered">
+        <thead>
+          <tr>
+            <th>Mã HĐ</th>
+            <th>Khách thuê</th>
+            <th>Liên hệ</th>
+            <th>Tài sản</th>
+            <th>Thời gian</th>
+          </tr>
+        </thead>
+        <tbody>`;
+    rentingContracts.forEach(c => {
+      html += `
+        <tr>
+          <td>${c.contract}</td>
+          <td>${c.customer}</td>
+          <td>${c.phone}<br>${c.email}</td>
+          <td>${c.asset}</td>
+          <td>${c.time}</td>
+        </tr>`;
+    });
+    html += "</tbody></table>";
+  }
+
+  if (type === "users") {
+    title = "👤 Người dùng đã đăng ký";
+    let users = JSON.parse(localStorage.getItem("users")) || [];
+    html = users.length
+      ? "<ol>" + users.map(u => `<li>${u}</li>`).join("") + "</ol>"
+      : "<p>Chưa có người dùng đăng ký.</p>";
+  }
+
+  document.getElementById("modalTitle").innerHTML = title;
+  document.getElementById("modalBody").innerHTML = html;
+
+  new bootstrap.Modal(document.getElementById("detailModal")).show();
+}
+</script>
+<script>
+function updateContractStatus(index, status) {
+  let contracts = JSON.parse(localStorage.getItem("contracts")) || [];
+  contracts[index].status = status;
+
+  // Gửi thông báo cho user
+  let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+  notifications.unshift({
+    user: contracts[index].user,
+    message: `Hợp đồng ${contracts[index].asset} đã ${status}`,
+    time: new Date().toLocaleString()
+  });
+
+  localStorage.setItem("contracts", JSON.stringify(contracts));
+  localStorage.setItem("notifications", JSON.stringify(notifications));
+
+  alert("Đã xử lý hợp đồng");
+}
+</script>
+<script>
+/* ================= ADMIN DASHBOARD ================= */
+
+let contracts = JSON.parse(localStorage.getItem("contracts")) || [];
+let users = JSON.parse(localStorage.getItem("users")) || [];
+
+document.getElementById("totalUsers").innerText = users.length;
+document.getElementById("pendingContracts").innerText =
+  contracts.filter(c => c.status === "Chờ duyệt").length;
+
+/* Hiển thị hợp đồng */
+function renderContracts() {
+  const list = document.getElementById("contractList");
+  list.innerHTML = "";
+
+  contracts.forEach((c, index) => {
+    list.innerHTML += `
+      <tr>
+        <td>${c.user}</td>
+        <td>${c.assetId}</td>
+        <td>${c.start} → ${c.end}</td>
+        <td>${c.status}</td>
+        <td>
+          <button class="btn btn-success btn-sm" onclick="approve(${index})">Duyệt</button>
+          <button class="btn btn-danger btn-sm" onclick="reject(${index})">Từ chối</button>
+        </td>
+      </tr>
+    `;
+  });
+}
+
+function approve(i) {
+  contracts[i].status = "Đã duyệt";
+  notifyUser(contracts[i].user, "Hợp đồng đã được duyệt");
+}
+
+function reject(i) {
+  contracts[i].status = "Từ chối";
+  notifyUser(contracts[i].user, "Hợp đồng bị từ chối");
+}
+
+function notifyUser(user, message) {
+  let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
+  notifications.push({
+    user,
+    message,
+    time: new Date().toLocaleString()
+  });
+  localStorage.setItem("notifications", JSON.stringify(notifications));
+  localStorage.setItem("contracts", JSON.stringify(contracts));
+  renderContracts();
+}
+
+renderContracts();
+</script>
+<h3 class="fw-bold mb-3">📄 Danh sách hợp đồng thuê</h3>
+
+<table class="table table-bordered">
+  <thead>
+    <tr>
+      <th>Khách thuê</th>
+      <th>Tài sản</th>
+      <th>Thời gian</th>
+      <th>Trạng thái</th>
+      <th>Thao tác</th>
+    </tr>
+  </thead>
+  <tbody id="contractTable"></tbody>
+</table>
+
 </body>
 </html>

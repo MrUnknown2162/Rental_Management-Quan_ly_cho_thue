@@ -1,0 +1,150 @@
+body {
+  background: linear-gradient(120deg, #fff1f5, #fef6ff);
+  font-family: "Segoe UI", sans-serif;
+}
+
+.navbar {
+  background: #ffb6c1 !important;
+}
+
+.navbar a {
+  color: white !important;
+  font-weight: 600;
+}
+
+.card {
+  border-radius: 20px;
+  border: none;
+  transition: 0.3s;
+}
+
+.card:hover {
+  transform: translateY(-6px);
+  box-shadow: 0 12px 30px rgba(255,182,193,0.45);
+}
+
+.btn-primary {
+  background: #ff7eb9;
+  border: none;
+  border-radius: 20px;
+}
+
+.search-box {
+  border-radius: 30px;
+  border: 2px solid #ffc0cb;
+  padding: 10px 20px;
+}
+
+.no-result {
+  text-align: center;
+  color: #ff69b4;
+  font-weight: bold;
+  margin-top: 40px;
+}
+/* ================= NAVBAR BUTTON STYLE ================= */
+
+/* Nền navbar (màu hồng bạn đang dùng) */
+.navbar {
+  background-color: #ffc0cb !important;
+}
+
+/* Style chung cho các nút trên navbar */
+.navbar .btn {
+  background-color: #ffffff;
+  color: #000000;              /* chữ màu đen */
+  font-weight: 600;
+  border-radius: 12px;
+  padding: 8px 18px;
+  margin-left: 6px;
+  border: 2px solid transparent;
+  transition: all 0.3s ease;   /* hiệu ứng mượt */
+}
+
+/* Hover: đổi màu khi di chuột */
+.navbar .btn:hover {
+  background-color: #ff69b4;   /* hồng đậm */
+  color: #ffffff;              /* chữ trắng */
+  border-color: #ff1493;
+  transform: translateY(-2px); /* nhích nhẹ lên */
+  box-shadow: 0 6px 12px rgba(255, 105, 180, 0.4);
+}
+
+/* Khi đang ở trang hiện tại (active – nếu bạn dùng) */
+.navbar .btn.active {
+  background-color: #ff1493;
+  color: #ffffff;
+}
+.navbar .btn.active:hover {
+  background-color: #ff69b4;
+  border-color: #ff1493;
+}
+/* ================= CUTE NAVBAR UPGRADE ================= */
+
+/* Navbar nền gradient hồng */
+.navbar {
+  background: linear-gradient(135deg, #ffc0cb, #ffb6c1);
+  padding: 14px 0;
+  box-shadow: 0 6px 18px rgba(255, 182, 193, 0.45);
+}
+
+/* Logo */
+.navbar-brand {
+  font-weight: 800;
+  font-size: 22px;
+  color: #000 !important;
+  letter-spacing: 1px;
+}
+
+/* Container nút */
+.navbar .btn {
+  background: #ffffff;
+  color: #000000;
+  font-weight: 600;
+  border-radius: 18px;
+  padding: 8px 22px;
+  margin-left: 8px;
+  border: 2px solid transparent;
+  transition: all 0.35s ease;
+  position: relative;
+  overflow: hidden;
+}
+
+/* Hiệu ứng ánh sáng khi hover */
+.navbar .btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: rgba(255,255,255,0.5);
+  transform: skewX(-25deg);
+  transition: all 0.5s ease;
+}
+
+/* Hover */
+.navbar .btn:hover::before {
+  left: 130%;
+}
+
+.navbar .btn:hover {
+  background: linear-gradient(135deg, #ff69b4, #ff1493);
+  color: #ffffff;
+  transform: translateY(-3px) scale(1.05);
+  box-shadow: 0 10px 22px rgba(255, 20, 147, 0.45);
+}
+
+/* Nút đang active */
+.navbar .btn.active {
+  background: linear-gradient(135deg, #ff1493, #ff69b4);
+  color: #ffffff;
+  box-shadow: 0 6px 16px rgba(255, 20, 147, 0.5);
+}
+
+/* Responsive mobile */
+@media (max-width: 768px) {
+  .navbar .btn {
+    margin-top: 8px;
+    width: 100%;
+  }
+}

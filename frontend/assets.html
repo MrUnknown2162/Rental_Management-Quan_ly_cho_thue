@@ -1,38 +1,242 @@
 <!DOCTYPE html>
 <html lang="vi">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width,initial-scale=1">
-  <title>Tài Sản — Rental Manager</title>
+  <meta charset="UTF-8">
+  <title>Danh sách tài sản cho thuê</title>
+
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+
+  <!-- CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/cute.css">
 </head>
 <body>
-  <nav class="navbar navbar-expand-lg navbar-dark bg-dark">
-    <div class="container">
-      <a class="navbar-brand" href="index.html">Rental Manager</a>
-      <div class="collapse navbar-collapse">
-        <ul class="navbar-nav ms-auto">
-          <li class="nav-item"><a class="nav-link active" href="#">Tài Sản</a></li>
-          <li class="nav-item"><a class="nav-link" href="login.html">Đăng Nhập</a></li>
-        </ul>
+
+<!-- ================= NAVBAR ================= -->
+<nav class="navbar navbar-expand-lg">
+  <div class="container">
+    <a class="navbar-brand fw-bold" href="index.html">QARent</a>
+    <div>
+      <a href="index.html" class="btn btn-light me-2">Trang chủ</a>
+      <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
+      <a href="login.html" class="btn btn-light">Đăng nhập</a>
+    </div>
+  </div>
+</nav>
+
+<!-- ================= TIÊU ĐỀ ================= -->
+<section class="container py-5">
+  <h1 class="fw-bold text-center mb-4">Danh sách tài sản cho thuê</h1>
+  <p class="text-center">
+    Hệ thống cung cấp đa dạng các loại nhà ở, chung cư và phương tiện
+    cho thuê với đầy đủ thông tin chi tiết.
+  </p>
+</section>
+
+<!-- ================= NHÀ ================= -->
+<section class="container py-5">
+  <h2 class="fw-bold mb-4">🏠 Nhà cho thuê</h2>
+  <div class="row">
+
+    <!-- Nhà 1 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/house1.jpg" class="img-fluid rounded mb-2">
+        <h5>Nhà phố Quận 1</h5>
+        <p>Địa chỉ: Quận 1, TP.HCM</p>
+        <p>Diện tích: 120m² – 3 phòng ngủ</p>
+        <p>Giá: <b>1.500.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=1" class="btn btn-primary w-100">Xem chi tiết</a>
       </div>
     </div>
-  </nav>
 
-  <main class="container py-5">
-    <div class="d-flex justify-content-between align-items-center mb-4">
-      <h2 class="mb-0">Danh sách tài sản</h2>
-      <input id="searchInput" class="form-control w-25" placeholder="Tìm kiếm...">
+    <!-- Nhà 2 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/house2.jpg" class="img-fluid rounded mb-2">
+        <h5>Nhà nguyên căn Thủ Đức</h5>
+        <p>Địa chỉ: TP. Thủ Đức</p>
+        <p>Diện tích: 90m² – 2 phòng ngủ</p>
+        <p>Giá: <b>1.200.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=2" class="btn btn-primary w-100">Xem chi tiết</a>
+      </div>
     </div>
 
-    <div id="assetList" class="row g-4">
-      <!-- Cards render by main.js -->
+    <!-- Nhà 3 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/house3.jpg" class="img-fluid rounded mb-2">
+        <h5>Villa sân vườn Quận 9</h5>
+        <p>Địa chỉ: Quận 9</p>
+        <p>Diện tích: 250m² – Hồ bơi riêng</p>
+        <p>Giá: <b>3.500.000đ / ngày</b></p>
+        <p>Trạng thái: Đã thuê</p>
+        <a href="asset-detail.html?id=3" class="btn btn-primary w-100">Xem chi tiết</a>
+      </div>
     </div>
-  </main>
 
-  <script src="assets/js/api.js"></script>
-  <script src="assets/js/main.js"></script>
-  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+    <!-- Nhà 4 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/house4.jpg" class="img-fluid rounded mb-2">
+        <h5>Nhà phố Gò Vấp</h5>
+        <p>Địa chỉ: Gò Vấp</p>
+        <p>Diện tích: 100m² – 3 phòng ngủ</p>
+        <p>Giá: <b>1.100.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=4" class="btn btn-primary w-100">Xem chi tiết</a>
+      </div>
+    </div>
+
+    <!-- Nhà 5 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/house5.jpg" class="img-fluid rounded mb-2">
+        <h5>Nhà nguyên căn Tân Bình</h5>
+        <p>Địa chỉ: Tân Bình</p>
+        <p>Diện tích: 110m² – 3 phòng ngủ</p>
+        <p>Giá: <b>1.400.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=5" class="btn btn-primary w-100">Xem chi tiết</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= CHUNG CƯ ================= -->
+<section class="container py-5">
+  <h2 class="fw-bold mb-4">🏢 Chung cư cho thuê</h2>
+  <div class="row">
+
+    <!-- Chung cư 1 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/apartment1.jpg" class="img-fluid rounded mb-2">
+        <h5>Chung cư Bình Thạnh</h5>
+        <p>2 phòng ngủ – Full nội thất</p>
+        <p>Giá: <b>1.300.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=6" class="btn btn-primary w-100">Xem chi tiết</a>
+      </div>
+    </div>
+
+    <!-- Chung cư 2 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/apartment2.jpg" class="img-fluid rounded mb-2">
+        <h5>Chung cư Quận 7</h5>
+        <p>Gần Phú Mỹ Hưng</p>
+        <p>Giá: <b>1.600.000đ / ngày</b></p>
+        <p>Trạng thái: Đã thuê</p>
+        <a href="asset-detail.html?id=7" class="btn btn-primary w-100">Xem chi tiết</a>
+      </div>
+    </div>
+
+    <!-- Chung cư 3 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/houses/apartment3.jpg" class="img-fluid rounded mb-2">
+        <h5>Chung cư Thảo Điền</h5>
+        <p>View sông – Cao cấp</p>
+        <p>Giá: <b>2.000.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=8" class="btn btn-primary w-100">Xem chi tiết</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= XE ================= -->
+<section class="container py-5">
+  <h2 class="fw-bold mb-4">🚗 Xe cho thuê</h2>
+  <div class="row">
+
+    <!-- Xe 1 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/cars/car1.jpg" class="img-fluid rounded mb-2">
+        <h5>Toyota Vios 2022</h5>
+        <p>Sedan – 5 chỗ</p>
+        <p>Giá: <b>700.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=9" class="btn btn-primary w-100">Thuê xe</a>
+      </div>
+    </div>
+
+    <!-- Xe 2 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/cars/car2.jpg" class="img-fluid rounded mb-2">
+        <h5>Honda City 2023</h5>
+        <p>Sedan – 5 chỗ</p>
+        <p>Giá: <b>750.000đ / ngày</b></p>
+        <p>Trạng thái: Đã thuê</p>
+        <a href="asset-detail.html?id=10" class="btn btn-primary w-100">Thuê xe</a>
+      </div>
+    </div>
+
+    <!-- Xe 3 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/cars/car3.jpg" class="img-fluid rounded mb-2">
+        <h5>Mazda CX5</h5>
+        <p>SUV – 5 chỗ</p>
+        <p>Giá: <b>1.200.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=11" class="btn btn-primary w-100">Thuê xe</a>
+      </div>
+    </div>
+
+    <!-- Xe 4 -->
+    <div class="col-md-4 mb-4">
+      <div class="card p-3 h-100">
+        <img src="assets/images/cars/car4.jpg" class="img-fluid rounded mb-2">
+        <h5>Ford Everest</h5>
+        <p>SUV – 7 chỗ</p>
+        <p>Giá: <b>1.500.000đ / ngày</b></p>
+        <p>Trạng thái: Còn trống</p>
+        <a href="asset-detail.html?id=12" class="btn btn-primary w-100">Thuê xe</a>
+      </div>
+    </div>
+
+  </div>
+</section>
+
+<!-- ================= FOOTER ================= -->
+<footer class="text-center py-4">
+  <p>© 2025 Hệ thống quản lý cho thuê</p>
+</footer>
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
+
+<script>
+/* ================= ASSETS PAGE USER CHECK ================= */
+
+const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
+
+if (!CURRENT_USER) {
+  alert("Bạn vui lòng đăng nhập để xem tài sản");
+  window.location.href = "login.html";
+}
+
+/* Hiện tên user góc phải nếu có */
+if (document.getElementById("userNameDisplay")) {
+  document.getElementById("userNameDisplay").innerText = CURRENT_USER.name;
+}
+
+/* Chặn admin thuê */
+function rentAsset(assetId) {
+  if (CURRENT_USER.role === "admin") {
+    alert("Tài khoản admin không được phép thuê tài sản");
+    return;
+  }
+  window.location.href = "asset-detail.html?id=" + assetId;
+}
+</script>
+
 </body>
 </html>
