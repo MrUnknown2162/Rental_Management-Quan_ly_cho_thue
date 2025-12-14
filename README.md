@@ -15,13 +15,19 @@ Quản lý phòng (Unit – multi-unit)
 Phân quyền theo chủ sở hữu
 
 🧱 Kiến trúc tổng thể
+
 Frontend (HTML / CSS / JS)
+
         ↓ REST API
+
 Backend (FastAPI + JWT)
+
         ↓ ORM
+
 PostgreSQL (SQLAlchemy + Alembic)
 
 ⚙️ Công nghệ sử dụng
+
 Backend
 
 FastAPI
@@ -49,26 +55,45 @@ JavaScript (fetch API)
 LocalStorage (demo)
 
 📂 Cấu trúc thư mục
+
 Rental_Management-Quan_ly_cho_thue/
 │
 ├── backend/
+│
 │   ├── app/
+│   │
 │   │   ├── api/
+│   │   │
 │   │   │   ├── auth.py
+│   │   │   │
 │   │   │   ├── property.py
+│   │   │   │
 │   │   │   ├── unit.py
+│   │   │   │
 │   │   │   └── booking.py
+│   │   │
 │   │   ├── core/
+│   │   │   │
 │   │   │   ├── config.py
+│   │   │   │
 │   │   │   ├── security.py
+│   │   │   │
 │   │   │   └── token.py
+│   │   │
 │   │   ├── models/
+│   │   │
 │   │   ├── schemas/
+│   │   │
 │   │   ├── crud/
+│   │   │
 │   │   ├── database/
+│   │   │
 │   │   └── main.py
+│   │
 │   ├── migrations/
+│   │
 │   ├── alembic.ini
+│   │
 │   └── requirements.txt
 │
 ├── frontend/   (demo – HTML/CSS/JS)
@@ -76,17 +101,25 @@ Rental_Management-Quan_ly_cho_thue/
 └── README.md
 
 🚀 Hướng dẫn chạy Backend
+
 1️⃣ Tạo virtual environment
+
 cd backend
+
 python -m venv venv
+
 venv\Scripts\activate   # Windows
 
 2️⃣ Cài thư viện
+
 pip install -r requirements.txt
 
 3️⃣ Tạo file .env
+
 DATABASE_URL=postgresql+psycopg2://rental_user:user123@localhost:5432/rental_db
+
 SECRET_KEY=supersecretkey
+
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 
 4️⃣ Chạy migrate database
@@ -180,6 +213,7 @@ Có thể thay frontend bằng React/Vue sau
 👤 Tác giả
 
 Nguyễn Trường An
+
 Nguyễn Thị Bích Quyên
 
 Sinh viên – Trường Đại học Bình Dương
@@ -189,4 +223,5 @@ Dự án học phần / đồ án
 📌 Trạng thái dự án
 
 ✅ Backend: Hoàn chỉnh (Auth + Property + Unit + Booking)
+
 ✅ Frontend: Demo / Backend
