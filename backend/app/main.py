@@ -9,3 +9,11 @@ app.include_router(auth.router, prefix="/auth", tags=["auth"])
 @app.get("/")
 def root():
     return {"message": "API quản lý cho thuê đang hoạt động"}
+
+from app.api import property
+
+app.include_router(
+    property.router,
+    prefix="/properties",
+    tags=["properties"]
+)
