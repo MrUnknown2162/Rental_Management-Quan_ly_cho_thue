@@ -25,3 +25,11 @@ app.include_router(
     prefix="/units",
     tags=["units"]
 )
+
+from app.api import booking
+
+app.include_router(
+    booking.router,
+    prefix="/bookings",
+    tags=["bookings"]
+)
