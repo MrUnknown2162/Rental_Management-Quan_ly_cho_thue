@@ -7,6 +7,7 @@ from app.schemas.property import PropertyCreate, PropertyRead
 from app.crud.property import create_property, get_properties_by_owner
 from app.core.token import get_current_user
 from app.models.user import User
+from app.core.token import get_current_user
 
 router = APIRouter()
 

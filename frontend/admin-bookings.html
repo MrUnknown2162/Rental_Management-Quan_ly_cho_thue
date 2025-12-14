@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="vi">
+<head>
+  <meta charset="UTF-8">
+  <title>Admin – Duyệt Booking</title>
+
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
+</head>
+<body class="bg-light">
+
+<script>
+/* ===== CHECK ADMIN ===== */
+const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
+const TOKEN = localStorage.getItem("access_token");
+
+if (!CURRENT_USER || CURRENT_USER.role !== "admin") {
+  alert("Chỉ admin mới được truy cập");
+  location.href = "login.html";
+}
+</script>
+
+<nav class="navbar navbar-expand-lg bg-dark">
+  <div class="container">
+    <a class="navbar-brand text-white fw-bold" href="dashboard.html">Admin Panel</a>
+    <a class="btn btn-light" href="dashboard.html">⬅ Quay lại</a>
+  </div>
+</nav>
+
+<div class="container py-5">
+  <h2 class="fw-bold mb-4">📄 Danh sách booking</h2>
+
+  <table class="table table-bordered text-center align-middle">
+    <thead class="table-dark">
+      <tr>
+        <th>ID</th>
+        <th>Unit</th>
+        <th>Khách</th>
+        <th>Thời gian</th>
+        <th>Trạng thái</th>
+        <th>Hành động</th>
+      </tr>
+    </thead>
+    <tbody id="bookingTable"></tbody>
+  </table>
+</div>
+
+<script>
+async function loadBookings() {
+  const res = await fetch("http://127.0.0.1:8000/bookings/by-unit/1", {
+    headers: {
+      Authorization: "Bearer " + TOKEN
+    }
+  });
+
+  const bookings = await res.json();
+  const tbody = document.getElementById("bookingTable");
+  tbody.innerHTML = "";
+
+  bookings.forEach(b => {
+    let statusBadge = {
+      pending: "warning",
+      approved: "success",
+      rejected: "danger"
+    }[b.status] || "secondary";
+
+    tbody.innerHTML += `
+      <tr>
+        <td>${b.id}</td>
+        <td>${b.unit_id}</td>
+        <td>${b.user_id}</td>
+        <td>${b.start_date} → ${b.end_date}</td>
+        <td>
+          <span class="badge bg-${statusBadge}">
+            ${b.status}
+          </span>
+        </td>
+        <td>
+          ${
+            b.status === "pending"
+              ? `
+                <button class="btn btn-success btn-sm" onclick="approve(${b.id})">✔ Duyệt</button>
+                <button class="btn btn-danger btn-sm" onclick="reject(${b.id})">✖ Từ chối</button>
+              `
+              : "-"
+          }
+        </td>
+      </tr>
+    `;
+  });
+}
+
+async function approve(id) {
+  await fetch(`http://127.0.0.1:8000/bookings/admin/approve/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + TOKEN
+    }
+  });
+  loadBookings();
+}
+
+async function reject(id) {
+  await fetch(`http://127.0.0.1:8000/bookings/admin/reject/${id}`, {
+    method: "PUT",
+    headers: {
+      Authorization: "Bearer " + TOKEN
+    }
+  });
+  loadBookings();
+}
+
+loadBookings();
+</script>
+
+</body>
+</html>

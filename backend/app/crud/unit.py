@@ -8,8 +8,10 @@ def create_unit(db: Session, data: UnitCreate):
         property_id=data.property_id,
         name=data.name,
         price=data.price,
+        description=data.description,
         is_available=data.is_available,
     )
+
     db.add(unit)
     db.commit()
     db.refresh(unit)

@@ -84,7 +84,9 @@ function qaAlert(msg) {
 
 const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
 const TOKEN = localStorage.getItem("access_token");
-const UNIT_ID = 1; // demo: id unit trong DB
+const params = new URLSearchParams(window.location.search);
+const UNIT_ID = params.get("id");
+
 
 function showRentForm() {
   if (!CURRENT_USER || !TOKEN) {
@@ -126,6 +128,16 @@ async function submitRent(e) {
 
   qaAlert("🎉 Gửi yêu cầu thuê thành công!");
 }
+</script>
+
+<script>
+const today = new Date().toISOString().split("T")[0];
+document.getElementById("startDate").min = today;
+document.getElementById("endDate").min = today;
+
+document.getElementById("startDate").addEventListener("change", e => {
+  document.getElementById("endDate").min = e.target.value;
+});
 </script>
 
 </body>

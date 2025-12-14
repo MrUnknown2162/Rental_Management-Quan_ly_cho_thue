@@ -3,6 +3,7 @@ from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
 from app.database.session import Base
+from sqlalchemy import Text
 
 
 class Unit(Base):
@@ -13,6 +14,7 @@ class Unit(Base):
 
     name = Column(String(100), nullable=False)
     price = Column(Integer, nullable=False)
+    description = Column(Text)
     is_available = Column(Boolean, default=True)
 
     created_at = Column(DateTime(timezone=True), server_default=func.now())

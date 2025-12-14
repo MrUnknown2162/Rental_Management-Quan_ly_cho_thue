@@ -8,6 +8,8 @@ from app.crud.unit import create_unit, get_units_by_property
 from app.core.token import get_current_user
 from app.models.user import User
 from app.models.property import Property
+from app.models.unit import Unit
+from app.core.token import get_current_user
 
 router = APIRouter()
 
@@ -37,3 +39,45 @@ def list_units(
     current_user: User = Depends(get_current_user),
 ):
     return get_units_by_property(db, property_id)
+
+@router.put("/{unit_id}")
+def update_unit(
+    unit_id: int,
+    data: UnitCreate,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+
+    unit = db.query(Unit).filter(Unit.id == unit_id).first()
+    if not unit:
+        raise HTTPException(status_code=404, detail="Unit not found")
+
+    unit.name = data.name
+    unit.price = data.price
+    unit.description = data.description
+    unit.is_available = data.is_available
+
+    db.commit()
+    db.refresh(unit)
+    return unit
+
+
+@router.delete("/{unit_id}")
+def delete_unit(
+    unit_id: int,
+    db: Session = Depends(get_db),
+    current_user: User = Depends(get_current_user),
+):
+    if current_user.role != "admin":
+        raise HTTPException(status_code=403, detail="Admin only")
+
+    unit = db.query(Unit).filter(Unit.id == unit_id).first()
+    if not unit:
+        raise HTTPException(status_code=404, detail="Unit not found")
+
+    db.delete(unit)
+    db.commit()
+
+    return {"message": "Đã xóa tài sản"}

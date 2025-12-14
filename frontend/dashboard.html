@@ -2,142 +2,200 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard quản trị - QARent</title>
+  <title>Admin Dashboard - QARent</title>
 
+  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-  <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/cute.css">
 
-  <style>
-    .dashboard-card {
-      cursor: pointer;
-      transition: all 0.3s ease;
-      border-radius: 20px;
-    }
-    .dashboard-card:hover {
-      transform: translateY(-6px);
-      box-shadow: 0 12px 25px rgba(255,105,180,0.4);
-    }
-  </style>
+  <!-- CSS -->
+  <link rel="stylesheet" href="assets/css/style.css">
+  <link rel="stylesheet" href="assets/css/style-safe.css">
 </head>
 <body>
 
+<!-- ===== CHECK ADMIN ===== -->
 <script>
-const TOKEN = localStorage.getItem("access_token");
-const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
-
-if (!TOKEN || !CURRENT_USER || CURRENT_USER.role !== "admin") {
-  alert("Bạn không có quyền truy cập dashboard");
-  location.href = "login.html";
-}
+  const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
+  if (!CURRENT_USER || CURRENT_USER.role !== "admin") {
+    alert("Bạn không có quyền truy cập trang này");
+    window.location.href = "login.html";
+  }
 </script>
 
+<!-- ===== NAVBAR ===== -->
 <nav class="navbar navbar-expand-lg">
   <div class="container">
-    <a class="navbar-brand fw-bold" href="index.html">QARent</a>
+    <a class="navbar-brand fw-bold" href="index.html">QARent Admin</a>
     <div>
       <a href="index.html" class="btn btn-light me-2">Trang chủ</a>
-      <a href="assets.html" class="btn btn-light me-2">Tài sản</a>
       <a href="dashboard.html" class="btn btn-light active me-2">Dashboard</a>
       <a href="#" class="btn btn-light" onclick="logout()">Đăng xuất</a>
+      <a href="admin-bookings.html" class="btn btn-warning">📄 Duyệt hồ sơ</a>
     </div>
   </div>
 </nav>
 
-<section class="container py-5">
-  <h1 class="fw-bold">📊 Dashboard quản lý</h1>
-  <p class="text-muted">Quản trị viên</p>
+<section class="container pb-5">
+  <h4 class="fw-bold mb-3">⚙️ Chức năng quản trị</h4>
+
+  <div class="row">
+    <div class="col-md-4 mb-3">
+      <a href="admin-assets.html" class="card p-4 text-center text-decoration-none">
+        <h5>📦 Quản lý tài sản</h5>
+        <p class="text-muted mb-0">Thêm, sửa, xóa tài sản</p>
+      </a>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="card p-4 text-center">
+        <h5>👤 Quản lý người dùng</h5>
+        <p class="text-muted mb-0">(Mô tả trong báo cáo)</p>
+      </div>
+    </div>
+
+    <div class="col-md-4 mb-3">
+      <div class="card p-4 text-center">
+        <h5>📄 Quản lý hợp đồng</h5>
+        <p class="text-muted mb-0">Duyệt & theo dõi</p>
+      </div>
+    </div>
+  </div>
 </section>
 
-<section class="container pb-5">
+<!-- ===== HEADER ===== -->
+<section class="container py-5">
+  <h1 class="fw-bold">📊 Dashboard quản trị</h1>
+  <p class="text-muted">Quản lý hệ thống cho thuê tài sản</p>
+</section>
+
+<!-- ===== STATS ===== -->
+<section class="container pb-4">
   <div class="row">
 
-    <div class="col-md-3 mb-4">
-      <div class="card p-4 text-center dashboard-card" onclick="openAssets()">
+    <div class="col-md-3 mb-3">
+      <div class="card p-4 text-center">
         <h6>Tổng tài sản</h6>
-        <h2 class="fw-bold text-danger" id="totalAssets">—</h2>
+        <h2 class="fw-bold text-primary">12</h2>
       </div>
     </div>
 
-    <div class="col-md-3 mb-4">
-      <div class="card p-4 text-center dashboard-card" onclick="openBookings()">
+    <div class="col-md-3 mb-3">
+      <div class="card p-4 text-center">
         <h6>Hợp đồng thuê</h6>
-        <h2 class="fw-bold text-success" id="totalBookings">—</h2>
+        <h2 class="fw-bold text-success">5</h2>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card p-4 text-center">
+        <h6>Người dùng</h6>
+        <h2 class="fw-bold text-warning">8</h2>
+      </div>
+    </div>
+
+    <div class="col-md-3 mb-3">
+      <div class="card p-4 text-center">
+        <h6>Doanh thu (ước tính)</h6>
+        <h2 class="fw-bold text-danger">--</h2>
       </div>
     </div>
 
   </div>
 </section>
 
-<div class="modal fade" id="detailModal">
-  <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title" id="modalTitle"></h5>
-        <button class="btn-close" data-bs-dismiss="modal"></button>
-      </div>
-      <div class="modal-body" id="modalBody"></div>
-    </div>
+<!-- ===== CONTRACT LIST ===== -->
+<section class="container pb-5">
+  <h4 class="fw-bold mb-3">📄 Danh sách hợp đồng thuê</h4>
+
+  <div class="card p-3">
+    <table class="table table-bordered mb-0">
+      <thead>
+        <tr>
+          <th>Khách thuê</th>
+          <th>Email</th>
+          <th>Tài sản</th>
+          <th>Thời gian</th>
+          <th>Trạng thái</th>
+          <th>Hành động</th>
+        </tr>
+      </thead>
+      <tbody id="contractTable">
+        <tr>
+          <td colspan="5" class="text-center text-muted">
+            Chưa có dữ liệu
+          </td>
+        </tr>
+      </tbody>
+    </table>
   </div>
-</div>
+</section>
 
-<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
-
+<!-- ===== SCRIPT ===== -->
 <script>
-const API = "http://127.0.0.1:8000";
-let ALL_PROPERTIES = [];
-let ALL_UNITS = [];
-let ALL_BOOKINGS = [];
-
-async function loadDashboard() {
-  const propRes = await fetch(`${API}/properties`, {
-    headers: { Authorization: "Bearer " + TOKEN }
-  });
-  ALL_PROPERTIES = await propRes.json();
-
-  for (const p of ALL_PROPERTIES) {
-    const unitRes = await fetch(`${API}/units/by-property/${p.id}`, {
-      headers: { Authorization: "Bearer " + TOKEN }
-    });
-    const units = await unitRes.json();
-    ALL_UNITS.push(...units);
-
-    for (const u of units) {
-      const bookRes = await fetch(`${API}/bookings/by-unit/${u.id}`, {
-        headers: { Authorization: "Bearer " + TOKEN }
-      });
-      const bookings = await bookRes.json();
-      ALL_BOOKINGS.push(...bookings);
-    }
-  }
-
-  totalAssets.innerText = ALL_UNITS.length;
-  totalBookings.innerText = ALL_BOOKINGS.length;
-}
-
-loadDashboard();
-
-function openAssets() {
-  modalTitle.innerText = "📦 Danh sách tài sản";
-  modalBody.innerHTML = ALL_UNITS.map(
-    u => `<p>• ${u.name} – ${u.price}đ</p>`
-  ).join("");
-  new bootstrap.Modal(detailModal).show();
-}
-
-function openBookings() {
-  modalTitle.innerText = "📄 Hợp đồng thuê";
-  modalBody.innerHTML = ALL_BOOKINGS.length === 0
-    ? "<p>Chưa có hợp đồng</p>"
-    : ALL_BOOKINGS.map(
-        b => `<p>• Unit #${b.unit_id} | ${b.start_date} → ${b.end_date}</p>`
-      ).join("");
-  new bootstrap.Modal(detailModal).show();
-}
-
 function logout() {
-  localStorage.clear();
-  location.href = "login.html";
+  localStorage.removeItem("currentUser");
+  localStorage.removeItem("access_token");
+  window.location.href = "login.html";
+}
+
+/* DEMO dữ liệu hợp đồng từ localStorage */
+const contracts = JSON.parse(localStorage.getItem("contracts")) || [];
+const table = document.getElementById("contractTable");
+
+if (contracts.length > 0) {
+  table.innerHTML = "";
+  contracts.forEach((c, index) => {
+    table.innerHTML += `
+      <tr>
+        <td>${c.user}</td>
+        <td>${c.userEmail}</td>
+        <td>${c.asset}</td>
+        <td>${c.start} → ${c.end}</td>
+        <td>
+          <span class="badge ${
+            c.status === "Đã duyệt"
+              ? "bg-success"
+              : c.status === "Từ chối"
+              ? "bg-danger"
+              : "bg-warning"
+          }">
+            ${c.status}
+          </span>
+        </td>
+        <td>
+          ${
+            c.status === "Chờ duyệt"
+              ? `
+                <button class="btn btn-success btn-sm me-1"
+                        onclick="approveContract(${index})">
+                  Duyệt
+                </button>
+                <button class="btn btn-danger btn-sm"
+                        onclick="rejectContract(${index})">
+                  Từ chối
+                </button>
+              `
+              : "-"
+          }
+        </td>
+      </tr>
+    `;
+  });
+
+  function approveContract(index) {
+  const contracts = JSON.parse(localStorage.getItem("contracts")) || [];
+  contracts[index].status = "Đã duyệt";
+  localStorage.setItem("contracts", JSON.stringify(contracts));
+  location.reload();
+}
+
+function rejectContract(index) {
+  const contracts = JSON.parse(localStorage.getItem("contracts")) || [];
+  contracts[index].status = "Từ chối";
+  localStorage.setItem("contracts", JSON.stringify(contracts));
+  location.reload();
+}
+
 }
 </script>
 

@@ -22,7 +22,12 @@
 
       <a href="index.html" class="btn btn-light me-2">Trang chủ</a>
       <a href="assets.html" class="btn btn-light me-2">Tài sản</a>
-      <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
+      <a href="dashboard.html"
+        class="btn btn-light me-2"
+        id="dashboardBtn"
+        style="display:none">
+        Dashboard
+      </a>
       <a href="login.html" class="btn btn-light me-3" id="loginBtn">Đăng nhập</a>
       
 
@@ -73,7 +78,7 @@
   <p>
     Hệ thống quản lý cho thuê được xây dựng nhằm hỗ trợ người dùng
     tìm kiếm, xem thông tin và thuê các loại tài sản như nhà ở, chung cư
-    và các phương tiện di chuyển.  
+    và các phương tiện di chuyển.
     Hệ thống giúp đơn giản hóa quá trình thuê, minh bạch thông tin,
     đồng thời hỗ trợ quản trị viên quản lý dữ liệu hiệu quả.
   </p>
@@ -123,7 +128,7 @@
     <!-- Nhà 1 -->
     <div class="col-md-4 mb-4">
       <div class="card p-3 h-100">
-        <img src="assets/images/houses/house1.jpg" class="img-fluid rounded mb-2">
+        <img src="images/nha_pho_-quan-1.jpg" class="img-fluid rounded mb-2">
         <h5>Nhà phố Quận 1</h5>
         <p>Địa chỉ: Quận 1, TP.HCM</p>
         <p>Diện tích: 120m² – 3 phòng ngủ</p>
@@ -136,7 +141,7 @@
     <!-- Nhà 2 -->
     <div class="col-md-4 mb-4">
       <div class="card p-3 h-100">
-        <img src="assets/images/houses/house2.jpg" class="img-fluid rounded mb-2">
+        <img src="images/nha-nguyen-can-thu-duc-.jpg" class="img-fluid rounded mb-2">
         <h5>Nhà nguyên căn Thủ Đức</h5>
         <p>Địa chỉ: TP. Thủ Đức</p>
         <p>Diện tích: 90m² – 2 phòng ngủ</p>
@@ -149,7 +154,7 @@
     <!-- Nhà 3 -->
     <div class="col-md-4 mb-4">
       <div class="card p-3 h-100">
-        <img src="assets/images/houses/house3.jpg" class="img-fluid rounded mb-2">
+        <img src="images/villa-quan-9.jpg" class="img-fluid rounded mb-2">
         <h5>Villa sân vườn Quận 9</h5>
         <p>Địa chỉ: Quận 9</p>
         <p>Diện tích: 250m² – Hồ bơi riêng</p>
@@ -161,7 +166,6 @@
 
   </div>
 </section>
-
 <!-- ================= CHUNG CƯ ================= -->
 <section class="container py-5">
   <h2 class="fw-bold mb-4">🏢 Chung cư cho thuê</h2>
@@ -169,7 +173,7 @@
 
     <div class="col-md-4 mb-4">
       <div class="card p-3 h-100">
-        <img src="assets/images/houses/apartment1.jpg" class="img-fluid rounded mb-2">
+        <img src="images/can-ho-chung-cu-my-duc.jpg" class="img-fluid rounded mb-2">
         <h5>Chung cư Bình Thạnh</h5>
         <p>2 phòng ngủ – Full nội thất</p>
         <p>Giá thuê: <b>1.300.000đ / ngày</b></p>
@@ -180,7 +184,7 @@
 
     <div class="col-md-4 mb-4">
       <div class="card p-3 h-100">
-        <img src="assets/images/houses/apartment2.jpg" class="img-fluid rounded mb-2">
+        <img src="images/can-ho-quan-7.png" class="img-fluid rounded mb-2">
         <h5>Chung cư Quận 7</h5>
         <p>Gần Phú Mỹ Hưng</p>
         <p>Giá thuê: <b>1.600.000đ / ngày</b></p>
@@ -199,10 +203,10 @@
 
     <div class="col-md-4 mb-4">
       <div class="card p-3 h-100">
-        <img src="assets/images/cars/car1.jpg" class="img-fluid rounded mb-2">
-        <h5>Toyota Vios 2022</h5>
-        <p>Sedan – 5 chỗ</p>
-        <p>Giá thuê: <b>700.000đ / ngày</b></p>
+        <img src="images/toyota_veloz_2023.jpg" class="img-fluid rounded mb-2">
+        <h5>Toyota Veloz 2023</h5>
+        <p>Sedan – 7 chỗ</p>
+        <p>Giá thuê: <b>1.000.000đ / ngày</b></p>
         <p>Đánh giá: ⭐⭐⭐⭐</p>
         <a href="asset-detail.html?id=7" class="btn btn-primary w-100">Thuê xe</a>
       </div>
@@ -210,10 +214,10 @@
 
     <div class="col-md-4 mb-4">
       <div class="card p-3 h-100">
-        <img src="assets/images/cars/car2.jpg" class="img-fluid rounded mb-2">
-        <h5>Honda City 2023</h5>
+        <img src="images/mec_glc300.jpg" class="img-fluid rounded mb-2">
+        <h5>Mercedec GLC 300</h5>
         <p>Sedan – 5 chỗ</p>
-        <p>Giá thuê: <b>750.000đ / ngày</b></p>
+        <p>Giá thuê: <b>3.500.000đ / ngày</b></p>
         <p>Đánh giá: ⭐⭐⭐⭐⭐</p>
         <a href="asset-detail.html?id=8" class="btn btn-primary w-100">Thuê xe</a>
       </div>
@@ -371,17 +375,28 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-/* ================= USER IDENTIFICATION MODULE ================= */
+/* ================= USER & NAVBAR ================= */
 
 const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
 
-if (CURRENT_USER) {
-  document.getElementById("userIndicator").style.display = "block";
-  document.getElementById("loginBtn").style.display = "none";
+const dashboardBtn = document.getElementById("dashboardBtn");
+const loginBtn = document.getElementById("loginBtn");
+const userIndicator = document.getElementById("userIndicator");
 
-  document.getElementById("userNameDisplay").innerText = CURRENT_USER.username;
-  document.getElementById("userAvatar").innerText =
-    CURRENT_USER.username.charAt(0).toUpperCase();
+if (CURRENT_USER) {
+  if (loginBtn) loginBtn.style.display = "none";
+
+  if (userIndicator) {
+    userIndicator.style.display = "block";
+    document.getElementById("userNameDisplay").innerText = CURRENT_USER.username;
+    document.getElementById("userAvatar").innerText =
+      CURRENT_USER.username.charAt(0).toUpperCase();
+  }
+
+  // ✅ CHỈ ADMIN THẤY DASHBOARD
+  if (CURRENT_USER.role === "admin" && dashboardBtn) {
+    dashboardBtn.style.display = "inline-block";
+  }
 }
 
 /* ================= PROFILE ================= */
@@ -418,13 +433,6 @@ function saveProfile() {
 function logoutUser() {
   localStorage.removeItem("currentUser");
   window.location.href = "login.html";
-}
-</script>
-<script>
-const dashboardBtn = document.querySelector('a[href="dashboard.html"]');
-
-if (!CURRENT_USER || CURRENT_USER.role !== "admin") {
-  if (dashboardBtn) dashboardBtn.style.display = "none";
 }
 </script>
 

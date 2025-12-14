@@ -1,4 +1,4 @@
-from sqlalchemy import Column, Integer, Date, DateTime, ForeignKey
+from sqlalchemy import Column, Integer, Date, DateTime, ForeignKey, String, func
 from sqlalchemy.sql import func
 from sqlalchemy.orm import relationship
 
@@ -19,3 +19,5 @@ class Booking(Base):
 
     unit = relationship("Unit", backref="bookings")
     user = relationship("User", backref="bookings")
+
+    status = Column(String(20), default="pending")  

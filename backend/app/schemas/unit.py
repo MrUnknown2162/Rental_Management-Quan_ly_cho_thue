@@ -5,6 +5,7 @@ from datetime import datetime
 class UnitBase(BaseModel):
     name: str
     price: int
+    description: str | None = None
     is_available: bool = True
 
 
