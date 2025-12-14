@@ -1,227 +1,142 @@
-🏠 QARent – Hệ thống Quản Lý Cho Thuê Nhà / Phòng Trọ
+# Rental Management System (QARent)
 
-QARent là hệ thống quản lý cho thuê nhà, phòng trọ theo mô hình Backend API (FastAPI) và Frontend Web (HTML/CSS/JS), hỗ trợ:
+Hệ thống **Quản lý cho thuê tài sản** (nhà trọ, căn hộ, phòng thuê)  
+được xây dựng bằng **FastAPI** theo mô hình **RESTful API**.
 
-Đăng ký / đăng nhập người dùng
+Dự án phục vụ mục đích học tập, thực hành xây dựng backend API có xác thực,
+phân quyền và quản lý dữ liệu cho bài tập / đồ án môn học.
 
-Xác thực JWT
+---
 
-Quản lý tài sản (Property)
+## 🚀 Chức năng chính
 
-Quản lý phòng (Unit – multi-unit)
+- Đăng ký, đăng nhập người dùng (JWT Authentication)
+- Xác thực người dùng bằng OAuth2 Password Flow
+- Quản lý tài sản cho thuê (Property)
+- Quản lý phòng cho thuê (Multi-unit)
+- Đặt thuê phòng (Booking)
+- Phân quyền người dùng (User / Admin)
+- Kết nối frontend demo để minh họa hoạt động hệ thống
 
-Đặt phòng (Booking)
+---
 
-Phân quyền theo chủ sở hữu
+## 🛠️ Công nghệ sử dụng
 
-🧱 Kiến trúc tổng thể
+### Backend
+- **FastAPI**
+- **SQLAlchemy**
+- **Alembic (Migration)**
+- **PostgreSQL**
+- **OAuth2 Password Flow + JWT**
+- **Pydantic v2**
 
-Frontend (HTML / CSS / JS)
+### Frontend (Demo)
+- HTML5
+- CSS3 + Bootstrap 5
+- JavaScript (Fetch API)
+- LocalStorage (demo)
 
-        ↓ REST API
+⚠️ *Frontend chỉ dùng để demo giao diện và test API, không phải production.*
 
-Backend (FastAPI + JWT)
+---
 
-        ↓ ORM
+## 🔐 Danh sách API chính
 
-PostgreSQL (SQLAlchemy + Alembic)
+### Authentication
+- `POST /auth/register` – Đăng ký tài khoản
+- `POST /auth/login` – Đăng nhập, nhận JWT
+- `GET  /auth/me` – Lấy thông tin user hiện tại (JWT required)
 
-⚙️ Công nghệ sử dụng
+### Properties (Tài sản)
+- `POST /properties` – Tạo tài sản cho thuê
+- `GET  /properties` – Danh sách tài sản của user
 
-Backend
+### Units (Phòng)
+- `POST /units` – Tạo phòng cho tài sản
+- `GET  /units/by-property/{property_id}` – Danh sách phòng theo tài sản
 
-FastAPI
+### Bookings (Đặt thuê)
+- `POST /bookings` – Đặt thuê phòng
+- `GET  /bookings/by-unit/{unit_id}` – Danh sách booking của phòng
 
-PostgreSQL
+---
 
-SQLAlchemy 2.x
+## ▶️ Hướng dẫn chạy Backend
 
-Alembic (Migration)
+### 1️⃣ Tạo virtual environment
 
-JWT (python-jose)
-
-OAuth2 Password Flow
-
-Pydantic v2
-
-Frontend (demo)
-
-HTML5
-
-CSS3 + Bootstrap 5
-
-JavaScript (fetch API)
-
-LocalStorage (demo)
-
-📂 Cấu trúc thư mục
-
-Rental_Management-Quan_ly_cho_thue/
-│
-├── backend/
-│
-│   ├── app/
-│   │
-│   │   ├── api/
-│   │   │
-│   │   │   ├── auth.py
-│   │   │   │
-│   │   │   ├── property.py
-│   │   │   │
-│   │   │   ├── unit.py
-│   │   │   │
-│   │   │   └── booking.py
-│   │   │
-│   │   ├── core/
-│   │   │   │
-│   │   │   ├── config.py
-│   │   │   │
-│   │   │   ├── security.py
-│   │   │   │
-│   │   │   └── token.py
-│   │   │
-│   │   ├── models/
-│   │   │
-│   │   ├── schemas/
-│   │   │
-│   │   ├── crud/
-│   │   │
-│   │   ├── database/
-│   │   │
-│   │   └── main.py
-│   │
-│   ├── migrations/
-│   │
-│   ├── alembic.ini
-│   │
-│   └── requirements.txt
-│
-├── frontend/   (demo – HTML/CSS/JS)
-│
-└── README.md
-
-🚀 Hướng dẫn chạy Backend
-
-1️⃣ Tạo virtual environment
+```bash
 
 cd backend
 
 python -m venv venv
 
-venv\Scripts\activate   # Windows
+Kích hoạt môi trường ảo:
 
-2️⃣ Cài thư viện
+Windows
+
+venv\Scripts\activate
+
+
+Linux / macOS
+
+source venv/bin/activate
+
+2️⃣ Cài đặt thư viện
 
 pip install -r requirements.txt
 
-3️⃣ Tạo file .env
+3️⃣ Cấu hình database
 
-DATABASE_URL=postgresql+psycopg2://rental_user:user123@localhost:5432/rental_db
+Tạo file .env trong thư mục backend/:
 
-SECRET_KEY=supersecretkey
+DATABASE_URL=postgresql+psycopg2://username:password@localhost:5432/rental_db
+
+SECRET_KEY=your_secret_key
+
+ALGORITHM=HS256
 
 ACCESS_TOKEN_EXPIRE_MINUTES=60
 
-4️⃣ Chạy migrate database
+4️⃣ Chạy migration
+
 alembic upgrade head
 
 5️⃣ Chạy server
+
 uvicorn app.main:app --reload
 
 
-📌 Truy cập Swagger UI:
+API Docs (Swagger):
+
 👉 http://127.0.0.1:8000/docs
 
-🔐 Luồng xác thực (JWT)
+🌐 Chạy Frontend (Demo)
 
-POST /auth/register – Đăng ký
+Frontend là HTML tĩnh, có thể mở bằng:
 
-POST /auth/login – Đăng nhập → nhận access_token
+Live Server (VS Code)
 
-Gửi header cho các API cần xác thực:
+Hoặc mở trực tiếp file frontend/index.html
 
-Authorization: Bearer <access_token>
+⚠️ Khi dùng backend thật, cần chỉnh BASE_URL trong JS về:
 
+http://127.0.0.1:8000
 
-GET /auth/me – Lấy thông tin user hiện tại
+📌 Ghi chú
 
-📌 Các API chính
-Auth
+Dự án tập trung vào Backend API
 
-POST /auth/register
+Frontend chỉ mang tính minh họa
 
-POST /auth/login
-
-GET /auth/me
-
-Property (Tài sản)
-
-POST /properties/
-
-GET /properties/ (chỉ tài sản của user)
-
-Unit (Phòng)
-
-POST /units/
-
-GET /units/by-property/{property_id}
-
-Booking (Đặt phòng)
-
-POST /bookings/
-
-GET /bookings/by-unit/{unit_id}
-
-🧪 Test nhanh bằng Swagger
-
-Đăng nhập tại /auth/login
-
-Copy token
-
-Bấm Authorize (🔒) trong Swagger
-
-Dán token (không cần gõ Bearer)
-
-Test các API khác
-
-🖥️ Frontend (Demo)
-
-Frontend hiện tại dùng để:
-
-Minh họa giao diện
-
-Test luồng API
-
-Chưa áp dụng phân quyền đầy đủ
-
-📌 Chạy frontend:
-
-Mở trực tiếp file .html
-
-Hoặc dùng Live Server (VS Code)
-
-⚠️ Lưu ý quan trọng
-
-Frontend hiện chỉ là demo
-
-Logic chính nằm ở backend
-
-Không dùng localStorage cho production
-
-Có thể thay frontend bằng React/Vue sau
+Phù hợp cho bài tập / đồ án môn học về Web / API / Cloud / Backend
 
 👤 Tác giả
 
-Nguyễn Trường An
+Sinh viên thực hiện: Nguyễn Trường An
 
-Nguyễn Thị Bích Quyên
+                        Nguyễn Thị Bích Quyên
 
-Sinh viên – Trường Đại học Bình Dương
+Môn học: Xây dựng hệ thống / Phát triển ứng dụng Web
 
-Dự án học phần / đồ án
-
-📌 Trạng thái dự án
-
-✅ Backend: Hoàn chỉnh (Auth + Property + Unit + Booking)
-
-✅ Frontend: Demo / Backend
+---
