@@ -17,3 +17,11 @@ app.include_router(
     prefix="/properties",
     tags=["properties"]
 )
+
+from app.api import unit
+
+app.include_router(
+    unit.router,
+    prefix="/units",
+    tags=["units"]
+)
