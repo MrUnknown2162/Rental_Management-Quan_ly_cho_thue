@@ -1,10 +1,11 @@
 from fastapi import FastAPI
-from app.api.auth import router as auth_router
+from app.api import auth
 
 app = FastAPI(title="Rental Management API")
 
-app.include_router(auth_router, prefix="/auth")
+app.include_router(auth.router, prefix="/auth", tags=["auth"])
+
 
 @app.get("/")
 def root():
-    return {"message": "Backend OK"}
+    return {"message": "API quản lý cho thuê đang hoạt động"}
