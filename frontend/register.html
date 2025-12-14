@@ -11,12 +11,11 @@
 <body class="bg-light">
 
 <div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card p-4 shadow rounded-4" style="width: 450px">
+  <div class="card p-4 shadow rounded-4" style="width:420px">
 
     <h3 class="text-center fw-bold mb-4">Đăng ký tài khoản QARent</h3>
 
     <form onsubmit="registerUser(event)">
-
       <div class="mb-3">
         <label>Họ và tên</label>
         <input type="text" id="regName" class="form-control" required>
@@ -31,15 +30,6 @@
         <label>Mật khẩu</label>
         <input type="password" id="regPassword" class="form-control" required>
       </div>
-      <div class="mb-3">
-  <label>Loại tài khoản</label>
-  <select id="role" class="form-control" required>
-    <option value="">-- Chọn loại tài khoản --</option>
-    <option value="user">Người dùng</option>
-    <option value="admin">Quản trị viên</option>
-  </select>
-</div>
-
 
       <button class="btn btn-success w-100">Đăng ký</button>
     </form>
@@ -48,11 +38,10 @@
       Đã có tài khoản?
       <a href="login.html">Đăng nhập</a>
     </p>
-
   </div>
 </div>
 
-<!-- MODAL QARENT -->
+<!-- MODAL -->
 <div class="modal fade" id="qaAlertModal">
   <div class="modal-dialog modal-dialog-centered">
     <div class="modal-content">
@@ -73,45 +62,29 @@ function qaAlert(msg) {
   new bootstrap.Modal(document.getElementById("qaAlertModal")).show();
 }
 
-function registerUser(e) {
+async function registerUser(e) {
   e.preventDefault();
 
-  const name = regName.value;
-  const email = regEmail.value;
-  const password = regPassword.value;
+  const res = await fetch("http://127.0.0.1:8000/auth/register", {
+    method: "POST",
+    headers: { "Content-Type": "application/json" },
+    body: JSON.stringify({
+      username: regName.value,
+      email: regEmail.value,
+      password: regPassword.value
+      // role KHÔNG GỬI → backend tự set user
+    })
+  });
 
-  let users = JSON.parse(localStorage.getItem("users")) || [];
+  const data = await res.json();
 
-  if (users.find(u => u.email === email)) {
-    qaAlert("Email này đã được đăng ký");
+  if (!res.ok) {
+    qaAlert(data.detail || "Đăng ký thất bại");
     return;
   }
 
-  const user = {
-    id: Date.now(),
-    name,
-    email,
-    password,
-    role: "user"
-  };
-
-  users.push({
-  id: Date.now(),
-  name: name.value,
-  email: email.value,
-  password: password.value,
-  role: role.value,   // 👈 QUAN TRỌNG
-  phone: "",
-  cccd: "",
-  address: ""
-});
-  localStorage.setItem("users", JSON.stringify(users));
-
-  // 🔐 lưu cho login lần sau
-  localStorage.setItem("rememberUser", JSON.stringify(user));
-
   qaAlert("Đăng ký thành công! Chuyển sang đăng nhập");
-  setTimeout(() => window.location.href = "login.html", 1500);
+  setTimeout(() => location.href = "login.html", 1200);
 }
 </script>
 

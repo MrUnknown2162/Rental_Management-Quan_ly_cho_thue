@@ -6,49 +6,44 @@
 
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
   <link rel="stylesheet" href="assets/css/style.css">
-  <link rel="stylesheet" href="assets/css/cute.css">
 </head>
 <body class="bg-light">
 
 <div class="container d-flex justify-content-center align-items-center vh-100">
-  <div class="card shadow p-4" style="width:420px">
+  <div class="card p-4 shadow rounded-4" style="width:400px">
 
-    <h3 class="fw-bold text-center mb-4">Đăng nhập QARent</h3>
+    <h3 class="text-center fw-bold mb-4">Đăng nhập QARent</h3>
 
-    <form id="loginForm">
-      <input id="loginEmail" type="email" class="form-control mb-3"
-             placeholder="Email" required>
-
-      <input id="loginPassword" type="password" class="form-control mb-3"
-             placeholder="Mật khẩu" required>
-
-      <div class="form-check mb-3">
-        <input class="form-check-input" type="checkbox" id="remember">
-        <label class="form-check-label">Nhớ tài khoản</label>
+    <form onsubmit="loginUser(event)">
+      <div class="mb-3">
+        <label>Email</label>
+        <input type="email" id="loginEmail" class="form-control" required>
       </div>
 
-      <button id="loginBtn" class="btn btn-primary w-100">
-        Đăng nhập
-      </button>
+      <div class="mb-3">
+        <label>Mật khẩu</label>
+        <input type="password" id="loginPassword" class="form-control" required>
+      </div>
+
+      <button class="btn btn-primary w-100">Đăng nhập</button>
     </form>
 
     <p class="text-center mt-3">
       Chưa có tài khoản?
       <a href="register.html">Đăng ký</a>
     </p>
-
   </div>
 </div>
 
 <!-- MODAL -->
-<div class="modal fade" id="alertModal" tabindex="-1">
+<div class="modal fade" id="qaAlertModal">
   <div class="modal-dialog modal-dialog-centered">
-    <div class="modal-content rounded-4">
+    <div class="modal-content">
       <div class="modal-header bg-primary text-white">
         <h5 class="modal-title">QARent thông báo</h5>
         <button class="btn-close btn-close-white" data-bs-dismiss="modal"></button>
       </div>
-      <div class="modal-body text-center fs-5" id="alertMessage"></div>
+      <div class="modal-body text-center" id="qaAlertMessage"></div>
     </div>
   </div>
 </div>
@@ -56,73 +51,51 @@
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-document.addEventListener("DOMContentLoaded", () => {
+function qaAlert(msg) {
+  document.getElementById("qaAlertMessage").innerText = msg;
+  new bootstrap.Modal(document.getElementById("qaAlertModal")).show();
+}
 
-  const form = document.getElementById("loginForm");
-  const btn = document.getElementById("loginBtn");
-  const modal = new bootstrap.Modal(document.getElementById("alertModal"));
+async function loginUser(e) {
+  e.preventDefault();
 
-  function showAlert(msg) {
-    document.getElementById("alertMessage").innerText = msg;
-    modal.show();
-  }
+  const form = new URLSearchParams();
+  form.append("username", loginEmail.value);
+  form.append("password", loginPassword.value);
 
-  /* ===== AUTO FILL ===== */
-  const rememberUser = JSON.parse(localStorage.getItem("rememberUser"));
-  if (rememberUser) {
-    loginEmail.value = rememberUser.email;
-    loginPassword.value = rememberUser.password;
-    remember.checked = true;
-  }
-
-  form.addEventListener("submit", e => {
-    e.preventDefault();
-    btn.disabled = true;
-
-    const users = JSON.parse(localStorage.getItem("users")) || [];
-    const emailInput = loginEmail.value.trim();   // 👈 FIX
-    const passwordInput = loginPassword.value;
-
-    const user = users.find(u => u.email === emailInput);
-
-    if (!user) {
-      showAlert("Tài khoản chưa đăng ký");
-      btn.disabled = false;
-      return;
-    }
-
-    if (user.password !== passwordInput) {
-      showAlert("Sai mật khẩu");
-      btn.disabled = false;
-      return;
-    }
-
-    /* ===== FIX ROLE ===== */
-    if (!user.role || user.role.toLowerCase() !== "admin" && user.role !== "user") {
-      user.role = "admin"; // ép admin cho tài khoản đã đăng ký admin trước đó
-    }
-
-    localStorage.setItem("currentUser", JSON.stringify(user));
-
-    /* ===== REMEMBER (NHẸ) ===== */
-    if (remember.checked) {
-      localStorage.setItem("rememberUser", JSON.stringify({
-        email: user.email,
-        password: user.password
-      }));
-    } else {
-      localStorage.removeItem("rememberUser");
-    }
-
-    showAlert("🎉 Chào mừng bạn đến với QARent!");
-
-    setTimeout(() => {
-      window.location.href =
-        user.role === "admin" ? "dashboard.html" : "index.html";
-    }, 600);
+  const res = await fetch("http://127.0.0.1:8000/auth/login", {
+    method: "POST",
+    headers: { "Content-Type": "application/x-www-form-urlencoded" },
+    body: form
   });
 
-});
+  const data = await res.json();
+
+  if (!res.ok) {
+    qaAlert(data.detail || "Sai email hoặc mật khẩu");
+    return;
+  }
+
+  localStorage.setItem("access_token", data.access_token);
+
+  const meRes = await fetch("http://127.0.0.1:8000/auth/me", {
+    headers: {
+      "Authorization": "Bearer " + data.access_token
+    }
+  });
+
+  if (!meRes.ok) {
+    qaAlert("Không lấy được thông tin người dùng");
+    return;
+  }
+
+  const me = await meRes.json();
+  localStorage.setItem("currentUser", JSON.stringify(me));
+
+  location.href = me.role === "admin"
+    ? "dashboard.html"
+    : "index.html";
+}
 </script>
 
 </body>

@@ -2,12 +2,9 @@
 <html lang="vi">
 <head>
   <meta charset="UTF-8">
-  <title>Dashboard quản lý</title>
+  <title>Dashboard quản trị - QARent</title>
 
-  <!-- Bootstrap -->
   <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/css/bootstrap.min.css" rel="stylesheet">
-
-  <!-- CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/cute.css">
 
@@ -24,23 +21,17 @@
   </style>
 </head>
 <body>
-<script>
-if (localStorage.getItem("adminLogged") !== "true") {
-  alert("Vui lòng đăng nhập quản trị");
-  window.location.href = "admin-login.html";
-}
-</script>
 
 <script>
+const TOKEN = localStorage.getItem("access_token");
 const CURRENT_USER = JSON.parse(localStorage.getItem("currentUser"));
-if (!CURRENT_USER || CURRENT_USER.role !== "admin") {
-  alert("Bạn không có quyền truy cập trang quản trị");
-  window.location.href = "login.html";
+
+if (!TOKEN || !CURRENT_USER || CURRENT_USER.role !== "admin") {
+  alert("Bạn không có quyền truy cập dashboard");
+  location.href = "login.html";
 }
 </script>
 
-
-<!-- ================= NAVBAR ================= -->
 <nav class="navbar navbar-expand-lg">
   <div class="container">
     <a class="navbar-brand fw-bold" href="index.html">QARent</a>
@@ -48,265 +39,107 @@ if (!CURRENT_USER || CURRENT_USER.role !== "admin") {
       <a href="index.html" class="btn btn-light me-2">Trang chủ</a>
       <a href="assets.html" class="btn btn-light me-2">Tài sản</a>
       <a href="dashboard.html" class="btn btn-light active me-2">Dashboard</a>
-      <a href="login.html" class="btn btn-light">Đăng xuất</a>
+      <a href="#" class="btn btn-light" onclick="logout()">Đăng xuất</a>
     </div>
   </div>
 </nav>
 
-<!-- ================= TIÊU ĐỀ ================= -->
 <section class="container py-5">
   <h1 class="fw-bold">📊 Dashboard quản lý</h1>
-  <p class="text-muted">Tổng quan hệ thống quản lý cho thuê</p>
+  <p class="text-muted">Quản trị viên</p>
 </section>
 
-<!-- ================= CARD THỐNG KÊ ================= -->
 <section class="container pb-5">
   <div class="row">
 
-    <!-- Tổng tài sản -->
     <div class="col-md-3 mb-4">
-      <div class="card p-4 text-center dashboard-card" onclick="openDetail('assets')">
+      <div class="card p-4 text-center dashboard-card" onclick="openAssets()">
         <h6>Tổng tài sản</h6>
-        <h2 class="fw-bold text-danger">6</h2>
-        <p>Nhà • Chung cư • Xe</p>
+        <h2 class="fw-bold text-danger" id="totalAssets">—</h2>
       </div>
     </div>
 
-    <!-- Đang cho thuê -->
     <div class="col-md-3 mb-4">
-      <div class="card p-4 text-center dashboard-card" onclick="openDetail('renting')">
-        <h6>Đang cho thuê</h6>
-        <h2 class="fw-bold text-success">3</h2>
-        <p>Hợp đồng hiệu lực</p>
-      </div>
-    </div>
-
-    <!-- Tạm hết -->
-    <div class="col-md-3 mb-4">
-      <div class="card p-4 text-center dashboard-card" onclick="openDetail('unavailable')">
-        <h6>Tạm hết</h6>
-        <h2 class="fw-bold text-warning">3</h2>
-        <p>Chưa khả dụng</p>
-      </div>
-    </div>
-
-    <!-- Người dùng -->
-    <div class="col-md-3 mb-4">
-      <div class="card p-4 text-center dashboard-card" onclick="openDetail('users')">
-        <h6>Người dùng</h6>
-        <h2 class="fw-bold text-primary">?</h2>
-        <p>Đã đăng ký</p>
+      <div class="card p-4 text-center dashboard-card" onclick="openBookings()">
+        <h6>Hợp đồng thuê</h6>
+        <h2 class="fw-bold text-success" id="totalBookings">—</h2>
       </div>
     </div>
 
   </div>
 </section>
 
-<!-- ================= MODAL CHI TIẾT ================= -->
-<div class="modal fade" id="detailModal" tabindex="-1">
+<div class="modal fade" id="detailModal">
   <div class="modal-dialog modal-xl modal-dialog-centered modal-dialog-scrollable">
     <div class="modal-content">
       <div class="modal-header">
         <h5 class="modal-title" id="modalTitle"></h5>
-        <button type="button" class="btn-close" data-bs-dismiss="modal"></button>
+        <button class="btn-close" data-bs-dismiss="modal"></button>
       </div>
       <div class="modal-body" id="modalBody"></div>
     </div>
   </div>
 </div>
 
-<!-- ================= FOOTER ================= -->
-<footer class="text-center py-4">
-  <p>© 2025 Hệ thống quản lý cho thuê</p>
-</footer>
-
-<!-- ================= SCRIPT ================= -->
 <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.2/dist/js/bootstrap.bundle.min.js"></script>
 
 <script>
-/* ===== DỮ LIỆU GIẢ LẬP ===== */
+const API = "http://127.0.0.1:8000";
+let ALL_PROPERTIES = [];
+let ALL_UNITS = [];
+let ALL_BOOKINGS = [];
 
-const allAssets = [
-  { name: "Nhà phố Quận 1", type: "Nhà", status: "Đang cho thuê" },
-  { name: "Nhà nguyên căn Thủ Đức", type: "Nhà", status: "Tạm hết" },
-  { name: "Chung cư Quận 7", type: "Chung cư", status: "Đang cho thuê" },
-  { name: "Chung cư Bình Thạnh", type: "Chung cư", status: "Tạm hết" },
-  { name: "Toyota Vios 2022", type: "Xe", status: "Đang cho thuê" },
-  { name: "Honda City 2023", type: "Xe", status: "Tạm hết" }
-];
+async function loadDashboard() {
+  const propRes = await fetch(`${API}/properties`, {
+    headers: { Authorization: "Bearer " + TOKEN }
+  });
+  ALL_PROPERTIES = await propRes.json();
 
-const rentingContracts = [
-  {
-    contract: "HD001",
-    customer: "Nguyễn Văn A",
-    phone: "0901234567",
-    email: "vana@gmail.com",
-    asset: "Nhà phố Quận 1",
-    time: "01/01/2025 – 01/03/2025"
-  },
-  {
-    contract: "HD002",
-    customer: "Trần Thị B",
-    phone: "0987654321",
-    email: "thib@gmail.com",
-    asset: "Toyota Vios 2022",
-    time: "10/02/2025 – 20/02/2025"
-  }
-];
-
-/* ===== HÀM MỞ CHI TIẾT ===== */
-
-function openDetail(type) {
-  let title = "";
-  let html = "";
-
-  if (type === "assets") {
-    title = "📦 Tổng tài sản trong hệ thống";
-    html = "<ul>";
-    allAssets.forEach(a => {
-      html += `<li><b>${a.name}</b> (${a.type}) – ${a.status}</li>`;
+  for (const p of ALL_PROPERTIES) {
+    const unitRes = await fetch(`${API}/units/by-property/${p.id}`, {
+      headers: { Authorization: "Bearer " + TOKEN }
     });
-    html += "</ul>";
+    const units = await unitRes.json();
+    ALL_UNITS.push(...units);
+
+    for (const u of units) {
+      const bookRes = await fetch(`${API}/bookings/by-unit/${u.id}`, {
+        headers: { Authorization: "Bearer " + TOKEN }
+      });
+      const bookings = await bookRes.json();
+      ALL_BOOKINGS.push(...bookings);
+    }
   }
 
-  if (type === "unavailable") {
-    title = "⛔ Tài sản tạm hết";
-    html = "<ul>";
-    allAssets
-      .filter(a => a.status === "Tạm hết")
-      .forEach(a => html += `<li>${a.name} (${a.type})</li>`);
-    html += "</ul>";
-  }
+  totalAssets.innerText = ALL_UNITS.length;
+  totalBookings.innerText = ALL_BOOKINGS.length;
+}
 
-  if (type === "renting") {
-    title = "📄 Tài sản đang cho thuê";
-    html = `
-      <table class="table table-bordered">
-        <thead>
-          <tr>
-            <th>Mã HĐ</th>
-            <th>Khách thuê</th>
-            <th>Liên hệ</th>
-            <th>Tài sản</th>
-            <th>Thời gian</th>
-          </tr>
-        </thead>
-        <tbody>`;
-    rentingContracts.forEach(c => {
-      html += `
-        <tr>
-          <td>${c.contract}</td>
-          <td>${c.customer}</td>
-          <td>${c.phone}<br>${c.email}</td>
-          <td>${c.asset}</td>
-          <td>${c.time}</td>
-        </tr>`;
-    });
-    html += "</tbody></table>";
-  }
+loadDashboard();
 
-  if (type === "users") {
-    title = "👤 Người dùng đã đăng ký";
-    let users = JSON.parse(localStorage.getItem("users")) || [];
-    html = users.length
-      ? "<ol>" + users.map(u => `<li>${u}</li>`).join("") + "</ol>"
-      : "<p>Chưa có người dùng đăng ký.</p>";
-  }
+function openAssets() {
+  modalTitle.innerText = "📦 Danh sách tài sản";
+  modalBody.innerHTML = ALL_UNITS.map(
+    u => `<p>• ${u.name} – ${u.price}đ</p>`
+  ).join("");
+  new bootstrap.Modal(detailModal).show();
+}
 
-  document.getElementById("modalTitle").innerHTML = title;
-  document.getElementById("modalBody").innerHTML = html;
+function openBookings() {
+  modalTitle.innerText = "📄 Hợp đồng thuê";
+  modalBody.innerHTML = ALL_BOOKINGS.length === 0
+    ? "<p>Chưa có hợp đồng</p>"
+    : ALL_BOOKINGS.map(
+        b => `<p>• Unit #${b.unit_id} | ${b.start_date} → ${b.end_date}</p>`
+      ).join("");
+  new bootstrap.Modal(detailModal).show();
+}
 
-  new bootstrap.Modal(document.getElementById("detailModal")).show();
+function logout() {
+  localStorage.clear();
+  location.href = "login.html";
 }
 </script>
-<script>
-function updateContractStatus(index, status) {
-  let contracts = JSON.parse(localStorage.getItem("contracts")) || [];
-  contracts[index].status = status;
-
-  // Gửi thông báo cho user
-  let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
-  notifications.unshift({
-    user: contracts[index].user,
-    message: `Hợp đồng ${contracts[index].asset} đã ${status}`,
-    time: new Date().toLocaleString()
-  });
-
-  localStorage.setItem("contracts", JSON.stringify(contracts));
-  localStorage.setItem("notifications", JSON.stringify(notifications));
-
-  alert("Đã xử lý hợp đồng");
-}
-</script>
-<script>
-/* ================= ADMIN DASHBOARD ================= */
-
-let contracts = JSON.parse(localStorage.getItem("contracts")) || [];
-let users = JSON.parse(localStorage.getItem("users")) || [];
-
-document.getElementById("totalUsers").innerText = users.length;
-document.getElementById("pendingContracts").innerText =
-  contracts.filter(c => c.status === "Chờ duyệt").length;
-
-/* Hiển thị hợp đồng */
-function renderContracts() {
-  const list = document.getElementById("contractList");
-  list.innerHTML = "";
-
-  contracts.forEach((c, index) => {
-    list.innerHTML += `
-      <tr>
-        <td>${c.user}</td>
-        <td>${c.assetId}</td>
-        <td>${c.start} → ${c.end}</td>
-        <td>${c.status}</td>
-        <td>
-          <button class="btn btn-success btn-sm" onclick="approve(${index})">Duyệt</button>
-          <button class="btn btn-danger btn-sm" onclick="reject(${index})">Từ chối</button>
-        </td>
-      </tr>
-    `;
-  });
-}
-
-function approve(i) {
-  contracts[i].status = "Đã duyệt";
-  notifyUser(contracts[i].user, "Hợp đồng đã được duyệt");
-}
-
-function reject(i) {
-  contracts[i].status = "Từ chối";
-  notifyUser(contracts[i].user, "Hợp đồng bị từ chối");
-}
-
-function notifyUser(user, message) {
-  let notifications = JSON.parse(localStorage.getItem("notifications")) || [];
-  notifications.push({
-    user,
-    message,
-    time: new Date().toLocaleString()
-  });
-  localStorage.setItem("notifications", JSON.stringify(notifications));
-  localStorage.setItem("contracts", JSON.stringify(contracts));
-  renderContracts();
-}
-
-renderContracts();
-</script>
-<h3 class="fw-bold mb-3">📄 Danh sách hợp đồng thuê</h3>
-
-<table class="table table-bordered">
-  <thead>
-    <tr>
-      <th>Khách thuê</th>
-      <th>Tài sản</th>
-      <th>Thời gian</th>
-      <th>Trạng thái</th>
-      <th>Thao tác</th>
-    </tr>
-  </thead>
-  <tbody id="contractTable"></tbody>
-</table>
 
 </body>
 </html>

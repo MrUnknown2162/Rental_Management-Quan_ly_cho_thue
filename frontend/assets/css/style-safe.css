@@ -1,0 +1,77 @@
+:root {
+  --primary: #2563eb;
+  --primary-hover: #1d4ed8;
+  --bg-main: #f8fafc;
+  --bg-card: #ffffff;
+  --text-main: #0f172a;
+  --text-muted: #64748b;
+  --border-color: #e5e7eb;
+}
+
+/* Reset nhẹ */
+body {
+  background: var(--bg-main);
+  color: var(--text-main);
+  font-family: "Segoe UI", sans-serif;
+}
+
+/* Navbar */
+.navbar {
+  background: #ffffff;
+  border-bottom: 1px solid var(--border-color);
+}
+
+.navbar-brand {
+  font-weight: 700;
+  color: var(--primary);
+}
+
+.navbar a {
+  color: var(--text-main);
+}
+
+/* Hero */
+.hero {
+  background: #ffffff;
+  padding: 80px 20px;
+  text-align: center;
+}
+
+.hero h1 {
+  font-weight: 800;
+}
+
+.hero p {
+  color: var(--text-muted);
+}
+
+/* Button */
+.btn-primary {
+  background: var(--primary);
+  border: none;
+  border-radius: 999px;
+  padding: 12px 28px;
+}
+
+.btn-primary:hover {
+  background: var(--primary-hover);
+}
+
+/* Card */
+.card {
+  border-radius: 16px;
+  border: 1px solid var(--border-color);
+  background: var(--bg-card);
+  transition: 0.2s;
+}
+
+.card:hover {
+  box-shadow: 0 10px 25px rgba(0,0,0,0.08);
+}
+
+/* Footer */
+footer {
+  background: #ffffff;
+  border-top: 1px solid var(--border-color);
+  color: var(--text-muted);
+}

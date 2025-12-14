@@ -10,6 +10,7 @@
   <!-- CSS -->
   <link rel="stylesheet" href="assets/css/style.css">
   <link rel="stylesheet" href="assets/css/cute.css">
+  <link rel="stylesheet" href="assets/css/style-safe.css">
 </head>
 <body>
 <!-- ================= NAVBAR ================= -->
@@ -23,6 +24,7 @@
       <a href="assets.html" class="btn btn-light me-2">Tài sản</a>
       <a href="dashboard.html" class="btn btn-light me-2">Dashboard</a>
       <a href="login.html" class="btn btn-light me-3" id="loginBtn">Đăng nhập</a>
+      
 
       <!-- ===== USER INDICATOR ===== -->
       <div class="dropdown" id="userIndicator" style="display:none">
@@ -377,15 +379,15 @@ if (CURRENT_USER) {
   document.getElementById("userIndicator").style.display = "block";
   document.getElementById("loginBtn").style.display = "none";
 
-  document.getElementById("userNameDisplay").innerText = CURRENT_USER.name;
+  document.getElementById("userNameDisplay").innerText = CURRENT_USER.username;
   document.getElementById("userAvatar").innerText =
-    CURRENT_USER.name.charAt(0).toUpperCase();
+    CURRENT_USER.username.charAt(0).toUpperCase();
 }
 
 /* ================= PROFILE ================= */
 
 function openProfile() {
-  profileName.value = CURRENT_USER.name;
+  profileName.value = CURRENT_USER.username;
   profileEmail.value = CURRENT_USER.email;
   profilePhone.value = CURRENT_USER.phone || "";
   profileCCCD.value = CURRENT_USER.cccd || "";
@@ -418,6 +420,14 @@ function logoutUser() {
   window.location.href = "login.html";
 }
 </script>
+<script>
+const dashboardBtn = document.querySelector('a[href="dashboard.html"]');
+
+if (!CURRENT_USER || CURRENT_USER.role !== "admin") {
+  if (dashboardBtn) dashboardBtn.style.display = "none";
+}
+</script>
+
 
 </body>
 </html>

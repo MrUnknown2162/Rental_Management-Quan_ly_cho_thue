@@ -148,3 +148,28 @@ body {
     width: 100%;
   }
 }
+/* ===== FIX DROPDOWN ACCOUNT TEXT (BẮT BUỘC) ===== */
+
+/* Nền dropdown */
+.dropdown-menu {
+  background-color: #ffffff;
+  border-radius: 14px;
+  padding: 6px 0;
+}
+
+/* Chữ trong dropdown */
+.dropdown-menu .dropdown-item {
+  color: #111827 !important;   /* chữ đen dễ đọc */
+  font-weight: 500;
+}
+
+/* Icon trong dropdown */
+.dropdown-menu .dropdown-item i {
+  color: #ff1493;              /* hồng đậm cho icon */
+}
+
+/* Hover */
+.dropdown-menu .dropdown-item:hover {
+  background-color: #ffe4e6;
+  color: #111827;
+}
